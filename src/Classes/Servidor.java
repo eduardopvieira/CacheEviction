@@ -1,19 +1,27 @@
 package Classes;
+import Exception.MyException;
 
 public class Servidor {
 
     OS raiz = null;
+    int qtdNos;
+    int altura;
 
     public Servidor() {}
 
-
-    public void inserir(int ch, OS cont) {
+    public void inserir(int ch, OS cont) throws MyException {
         raiz = inserir(raiz, ch, cont);
     }
 
-    private OS inserir(OS ordServ, int ch, OS cont) {
+    private OS inserir(OS ordServ, int ch, OS cont) throws MyException {
+
         if (ordServ == null) {
             return new OS(ch, cont);
+        }
+
+        OS teste = buscarOS(ch);
+        if (teste != null) {
+            throw new MyException("Esse valor já está inserido na árvore.");
         }
 
         if (ch < ordServ.getCodigo()) {
@@ -116,11 +124,10 @@ public class Servidor {
         return rotacaoEsquerdaSimples(ordServ);
     }
 
-    public void remover (int ch, String v) {
-        raiz = remover(raiz, ch, v);
+    public void remover (int ch) {
+        raiz = remover(raiz, ch);
     }
-    private OS remover(OS ordServ, int ch, String v) {
-
+    private OS remover(OS ordServ, int ch) {
 
         //Percorrendo a ordServore
         if (ordServ == null) {
@@ -128,11 +135,11 @@ public class Servidor {
         }
 
         if (ch < ordServ.getCodigo()) {
-            ordServ.esq = remover(ordServ.esq, ch, v);
+            ordServ.esq = remover(ordServ.esq, ch);
         }
 
         else if (ch > ordServ.getCodigo()) {
-            ordServ.dir = remover(ordServ.dir, ch, v);
+            ordServ.dir = remover(ordServ.dir, ch);
         }
 
         else {
@@ -165,7 +172,7 @@ public class Servidor {
                 ordServ.codigo = temp.codigo;
                 temp.codigo = ch;
 
-                ordServ.dir = remover(ordServ.dir, ch, v);
+                ordServ.dir = remover(ordServ.dir, ch);
             }
         }
         if(ordServ == null) {
@@ -240,4 +247,18 @@ public class Servidor {
         }
     }
 
+    public OS buscarOS(int cod) throws MyException {
+        return buscarOS(raiz, cod);
+    }
+
+    private OS buscarOS(OS arv, int cod) throws MyException {
+        if(cod > arv.getCodigo()) {
+            buscarOS(arv.dir, cod);
+        } else if (cod < arv.getCodigo()) {
+            buscarOS(arv.esq, cod);
+        } else if (cod == arv.getCodigo()) {
+            return arv;
+        }
+        throw new MyException("Este valor não existe na base de dados.");
+    }
 }

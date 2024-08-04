@@ -29,18 +29,18 @@ public class OS {
     public int getCodigo() {
         return this.codigo;
     }
-
-    public void setCodigo(int cod) {
-        this.codigo = cod;
-    }
+    public void setCodigo(int cod) {this.codigo = cod;}
 
     public String getNome() {
         return this.nome;
     }
+    public void setNome(String nome) {this.nome = nome;}
 
     public String getDescricao() {return this.descricao;}
+    public void setDescricao(String desc) {this.descricao = desc;}
 
     public String getHora() {return this.hora;}
+    public void setHora(String hora) {this.hora = hora;}
 
     public int getAlturaOS() {return this.alturaOS;}
 

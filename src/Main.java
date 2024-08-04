@@ -1,10 +1,15 @@
+import Classes.Cliente;
 import Classes.OS;
 import Classes.Servidor;
+import Exception.MyException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MyException {
+
+
 
         Servidor baseDados = new Servidor();
+        Cliente cli = new Cliente(baseDados);
 
         OS os1 = new OS(1, "Manutenção de Servidor", "Troca de hardware", "09:00");
         OS os2 = new OS(2, "Atualização de Software", "Atualização do sistema operacional", "10:30");
@@ -24,6 +29,7 @@ public class Main {
         baseDados.inserir(os7.getCodigo(), os7);
         baseDados.inserir(os8.getCodigo(), os8);
 
-        baseDados.listarOrdem(baseDados.getRaiz());
+        cli.comecarSimulacao();
+
     }
 }
