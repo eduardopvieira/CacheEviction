@@ -22,7 +22,7 @@ public class Servidor {
             return new Node(cod, cont);
         }
 
-        if (cod < raiz.getCodigo()) {
+        if (cod < arv.getCodigo()) {
             arv.esq = inserir(arv.esq, no);
         }
 
@@ -72,7 +72,7 @@ public class Servidor {
     }
 
     private int maior(int a, int b) {
-        return (a < b) ? a : b;
+        return (a > b) ? a : b;
     }
 
     private int ObterFB(Node no) {
@@ -127,7 +127,7 @@ public class Servidor {
     }
     private Node remover(Node no, int ch) {
 
-        //Percorrendo a ordServore
+        //percorrendo a arvore
         if (no == null) {
             return no;
         }
@@ -142,7 +142,7 @@ public class Servidor {
 
         else {
 
-            //CASO NÓ NAO TENHA FILHNode
+            //CASO SEJA O NÓ ALVO E ELE NAO TEM FILHOS
 
             if (no.esq == null && no.dir == null) {
                 no = null;
@@ -162,15 +162,20 @@ public class Servidor {
                 temp = null;
             }
 
-            /*Nó com 2 filhNode: pegue o sucessor do percurso em ordem
+            /*Nó com 2 filhos: pegue o sucessor do percurso em ordem
               Menor chave da subárvore direita do nó */
               else {
                 Node temp = menorChave(no.dir);
-
                 no.setCodigo(temp.getCodigo());
-                temp.setCodigo(ch);
+                no.setOS(temp.getOS()); // Atualize também o conteúdo
+                no.dir = remover(no.dir, temp.getCodigo());
+                
+                // Node temp = menorChave(no.dir);
 
-                no.dir = remover(no.dir, ch);
+                // no.setCodigo(temp.getCodigo());
+                // temp.setCodigo(ch);
+
+                // no.dir = remover(no.dir, ch);
             }
         }
         if(no == null) {
@@ -250,6 +255,10 @@ public class Servidor {
     }
 
     private Node buscarNode(Node arv, int cod){
+        if (arv == null) {
+            return null;
+        }
+        
         if(cod > arv.getCodigo()) {
             return buscarNode(arv.dir, cod);
         } else if (cod < arv.getCodigo()) {

@@ -37,10 +37,8 @@ public class Cliente {
 
                     if (sv.buscarNode(codigo) != null) {
                         throw new MyException("Esse código já existe na base de dados.");
-                    }
-                    
-
-                    System.out.println("Digite o nome da operação: ");
+                    } else {
+                        System.out.println("Digite o nome da operação: ");
                     String nome = sc.nextLine();
 
                     System.out.println("Digite a descrição: ");
@@ -53,6 +51,8 @@ public class Cliente {
                     Node no = new Node(codigo, os);
 
                     sv.inserir(no);
+                    }
+                                        
                     break;
 
                 case 2:
