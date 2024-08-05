@@ -3,219 +3,217 @@ import Exception.MyException;
 
 public class Servidor {
 
-    OS raiz = null;
+    Node raiz = null;
     int qtdNos;
-    int altura;
+    int alturaArv;
 
     public Servidor() {}
 
-    public void inserir(int ch, OS cont) throws MyException {
-        raiz = inserir(raiz, ch, cont);
+    public void inserir(Node no) throws MyException {
+        raiz = inserir(raiz, no);
     }
 
-    private OS inserir(OS ordServ, int ch, OS cont) throws MyException {
+    private Node inserir(Node arv, Node no) throws MyException {
 
-        if (ordServ == null) {
-            return new OS(ch, cont);
+        int cod = no.getCodigo();
+        OS cont = no.getOS();
+
+        if (arv == null) {
+            return new Node(cod, cont);
         }
 
-        OS teste = buscarOS(ch);
-        if (teste != null) {
-            throw new MyException("Esse valor já está inserido na árvore.");
+        if (cod < raiz.getCodigo()) {
+            arv.esq = inserir(arv.esq, no);
         }
 
-        if (ch < ordServ.getCodigo()) {
-            ordServ.esq = inserir(ordServ.esq, ch, cont);
-        }
-
-        else if (ch > ordServ.getCodigo()) {
-            ordServ.dir = inserir(ordServ.dir, ch, cont);
+        else if (cod > arv.getCodigo()) {
+            arv.dir = inserir(arv.dir, no);
         }
         else {
-            return ordServ;
+            return arv;
         }
 
-        ordServ.alturaOS = 1 + maior(altura(ordServ.esq), altura(ordServ.dir));
+        arv.setAlturaNo(1 + maior(altura(arv.esq), altura(arv.dir)));
 
         //Calculando fator de balanceamento (fb)
-        int fb = ObterFB(ordServ);
-        int fbSubordServEsq = ObterFB(ordServ.esq);
-        int fbSubordServDir = ObterFB(ordServ.dir);
+        int fb = ObterFB(arv);
+        int fbSubNoEsq = ObterFB(arv.esq);
+        int fbSubNoDir = ObterFB(arv.dir);
 
         //Rotação direita simples//
-        if (fb > 1 && fbSubordServEsq >= 0) {
-            return rotacaoDireitaSimples(ordServ);
+        if (fb > 1 && fbSubNoEsq >= 0) {
+            return rotacaoDireitaSimples(arv);
         }
 
         //Rotação esquerda simples
-        if (fb < -1 && fbSubordServDir <= 0) {
-            return rotacaoEsquerdaSimples(ordServ);
+        if (fb < -1 && fbSubNoDir <= 0) {
+            return rotacaoEsquerdaSimples(arv);
         }
 
         //Rotação dupla direita
-        if (fb > 1 && fbSubordServEsq < 0) {
-            rotacaoDireitaDupla(ordServ);
+        if (fb > 1 && fbSubNoEsq < 0) {
+            rotacaoDireitaDupla(arv);
         }
 
         //Rotação dupla esquerda
-        if (fb < -1 && fbSubordServDir > 0) {
-            rotacaoEsquerdaDupla(ordServ);
+        if (fb < -1 && fbSubNoDir > 0) {
+            rotacaoEsquerdaDupla(arv);
         }
 
-        return ordServ;
+        return arv;
     }
 
 
-    private int altura(OS ordServ) {
-        if (ordServ == null) {
+    private int altura(Node no) {
+        if (no == null) {
             return -1;
         }
-        return ordServ.getAlturaOS();
+        return no.getAlturaNo();
     }
 
     private int maior(int a, int b) {
         return (a < b) ? a : b;
     }
 
-    private int ObterFB(OS ordServ) {
-        if (ordServ == null) {
+    private int ObterFB(Node no) {
+        if (no == null) {
             return 0;
         }
 
-        return altura(ordServ.esq) - altura(ordServ.dir);
+        return altura(no.esq) - altura(no.dir);
     }
 
-    private OS rotacaoDireitaSimples(OS x) {
-        OS y = x.esq;  //Nó a esquerda do X passado como parametro
-        OS z = y.dir;  //Nó a direita do Y anterior
+    private Node rotacaoDireitaSimples(Node x) {
+        Node y = x.esq;  //Nó a esquerda do X passado como parametro
+        Node z = y.dir;  //Nó a direita do Y anterior
 
         y.dir = x;
         x.esq = z;
 
-        x.alturaOS = maior(altura(x.esq), altura(x.dir)) + 1;
-        y.alturaOS = maior(altura(y.esq), altura(y.dir)) + 1;
+        x.setAlturaNo(maior(altura(x.esq), altura(x.dir)) + 1);
+        y.setAlturaNo(maior(altura(y.esq), altura(y.dir)) + 1);
 
         return y;
     }
 
-    private OS rotacaoEsquerdaSimples(OS x) {
-        OS y = x.dir; //Nó a direita do X passado como parametro
-        OS z = y.esq; //OS a esquerda do nó anterior
+    private Node rotacaoEsquerdaSimples(Node x) {
+        Node y = x.dir; //Nó a direita do X passado como parametro
+        Node z = y.esq; //Node a esquerda do nó anterior
 
         y.esq = x;
         x.dir = z;
 
         //Atualizar as alturas
 
-        x.alturaOS = maior(altura(x.esq), altura(x.dir)) + 1;
-        y.alturaOS = maior(altura(y.esq), altura(y.dir)) + 1;
+        x.setAlturaNo(maior(altura(x.esq), altura(x.dir)) + 1);
+        y.setAlturaNo(maior(altura(y.esq), altura(y.dir)) + 1);
 
         //y vai ser a nova raiz, entao retornar y.
         return y;
     }
 
-    private OS rotacaoDireitaDupla(OS ordServ) {
-        ordServ.esq = rotacaoEsquerdaSimples(ordServ.esq);
-        return rotacaoDireitaSimples(ordServ);
+    private Node rotacaoDireitaDupla(Node no) {
+        no.esq = rotacaoEsquerdaSimples(no.esq);
+        return rotacaoDireitaSimples(no);
     }
 
-    private OS rotacaoEsquerdaDupla(OS ordServ) {
-        ordServ.dir = rotacaoDireitaSimples(ordServ.dir);
-        return rotacaoEsquerdaSimples(ordServ);
+    private Node rotacaoEsquerdaDupla(Node no) {
+        no.dir = rotacaoDireitaSimples(no.dir);
+        return rotacaoEsquerdaSimples(no);
     }
 
     public void remover (int ch) {
         raiz = remover(raiz, ch);
     }
-    private OS remover(OS ordServ, int ch) {
+    private Node remover(Node no, int ch) {
 
         //Percorrendo a ordServore
-        if (ordServ == null) {
-            return ordServ;
+        if (no == null) {
+            return no;
         }
 
-        if (ch < ordServ.getCodigo()) {
-            ordServ.esq = remover(ordServ.esq, ch);
+        if (ch < no.getCodigo()) {
+            no.esq = remover(no.esq, ch);
         }
 
-        else if (ch > ordServ.getCodigo()) {
-            ordServ.dir = remover(ordServ.dir, ch);
+        else if (ch > no.getCodigo()) {
+            no.dir = remover(no.dir, ch);
         }
 
         else {
 
-            //CASO NÓ NAO TENHA FILHOS
+            //CASO NÓ NAO TENHA FILHNode
 
-            if (ordServ.esq == null && ordServ.dir == null) {
-                ordServ = null;
+            if (no.esq == null && no.dir == null) {
+                no = null;
             }
 
             //NÓ SÓ TEM FILHO A DIREITA
-            else if (ordServ.esq == null) {
-                OS temp = ordServ;
-                ordServ = temp.dir;
+            else if (no.esq == null) {
+                Node temp = no;
+                no = temp.dir;
                 temp = null;
             }
 
-            //OS SO TEM FILHO A ESQUERDA
-            else if (ordServ.dir == null) {
-                OS temp = ordServ;
-                ordServ = temp.esq;
+            //Node SO TEM FILHO A ESQUERDA
+            else if (no.dir == null) {
+                Node temp = no;
+                no = temp.esq;
                 temp = null;
             }
 
-            /*Nó com 2 filhos: pegue o sucessor do percurso em ordem
+            /*Nó com 2 filhNode: pegue o sucessor do percurso em ordem
               Menor chave da subárvore direita do nó */
-            else {
-                OS temp = menorChave(ordServ.dir);
+              else {
+                Node temp = menorChave(no.dir);
 
-                ordServ.codigo = temp.codigo;
-                temp.codigo = ch;
+                no.setCodigo(temp.getCodigo());
+                temp.setCodigo(ch);
 
-                ordServ.dir = remover(ordServ.dir, ch);
+                no.dir = remover(no.dir, ch);
             }
         }
-        if(ordServ == null) {
-            return ordServ;
+        if(no == null) {
+            return no;
         }
 
-        ordServ.alturaOS = 1 + maior(altura(ordServ.esq), altura(ordServ.dir));
+        no.setAlturaNo(1 + maior(altura(no.esq), altura(no.dir)));
 
         //Calculando fator de balanceamento (fb)
-        int fb = ObterFB(ordServ);
-        int fbSubOrdServEsq = ObterFB(ordServ.esq);
-        int fbSubOrdServDir = ObterFB(ordServ.dir);
+        int fb = ObterFB(no);
+        int fbSubOrdServEsq = ObterFB(no.esq);
+        int fbSubOrdServDir = ObterFB(no.dir);
 
         //Rotação direita simples//
         if (fb > 1 && fbSubOrdServEsq >= 0) {
-            return rotacaoDireitaSimples(ordServ);
+            return rotacaoDireitaSimples(no);
         }
 
         //Rotação esquerda simples
         if (fb < -1 && fbSubOrdServDir <= 0) {
-            return rotacaoEsquerdaSimples(ordServ);
+            return rotacaoEsquerdaSimples(no);
         }
 
         //Rotação dupla direita
         if (fb > 1 && fbSubOrdServEsq < 0) {
-            rotacaoDireitaDupla(ordServ);
+            rotacaoDireitaDupla(no);
         }
 
         //Rotação dupla esquerda
         if (fb < -1 && fbSubOrdServDir > 0) {
-            rotacaoEsquerdaDupla(ordServ);
+            rotacaoEsquerdaDupla(no);
         }
 
-        return ordServ;
+        return no;
 
     }
 
-    public OS menorChave(OS ordServ) {
-        if (ordServ == null) {
+    public Node menorChave(Node no) {
+        if (no == null) {
             return null;
         }
 
-        OS temp = ordServ;
+        Node temp = no;
         while (temp.esq != null) {
             temp = temp.esq;
         }
@@ -226,19 +224,19 @@ public class Servidor {
         this.ordem(getRaiz());
     }
 
-    private void ordem(OS ordServ) {
-        if(ordServ != null) {
-            ordem(ordServ.esq);
-            System.out.print(ordServ.getCodigo() + " ");
-            ordem(ordServ.dir);
+    private void ordem(Node no) {
+        if(no != null) {
+            ordem(no.esq);
+            no.getConteudo();
+            ordem(no.dir);
         }
     }
 
-    public OS getRaiz() {
+    public Node getRaiz() {
         return this.raiz;
     }
 
-    public void listarOrdem(OS arv) {
+    public void listarOrdem(Node arv) {
 
         if (arv != null) {
             listarOrdem(arv.esq);
@@ -247,18 +245,18 @@ public class Servidor {
         }
     }
 
-    public OS buscarOS(int cod) throws MyException {
-        return buscarOS(raiz, cod);
+    public Node buscarNode(int cod) {
+        return buscarNode(raiz, cod);
     }
 
-    private OS buscarOS(OS arv, int cod) throws MyException {
+    private Node buscarNode(Node arv, int cod){
         if(cod > arv.getCodigo()) {
-            buscarOS(arv.dir, cod);
+            return buscarNode(arv.dir, cod);
         } else if (cod < arv.getCodigo()) {
-            buscarOS(arv.esq, cod);
+            return buscarNode(arv.esq, cod);
         } else if (cod == arv.getCodigo()) {
             return arv;
         }
-        throw new MyException("Este valor não existe na base de dados.");
+        return null;
     }
 }
