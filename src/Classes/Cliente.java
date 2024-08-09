@@ -128,6 +128,7 @@ public class Cliente {
                 case 4:
                     System.out.println("Digite o código do OS a ser removido: ");
                     int remov = sc.nextInt();
+                    sc.nextLine();
                     Node removido = sv.buscarNode(remov);
 
                     if (removido != null) {
@@ -144,7 +145,7 @@ public class Cliente {
                         logger.log("Remoção", removido.getRotacao(), sv.raiz.getAlturaNo(), removido.getCodigo(),
                                 cacheSv.cache);
                     } else {
-                        System.out.println("Nó com o código " + remov + " não encontrado na árvore.");
+                        System.out.println("Nenhum OS encontrado com esse código.");
                     }
                     break;
 
@@ -160,7 +161,7 @@ public class Cliente {
 
                     Node result = cacheSv.buscarCache(buscar);
                     if (result != null) {
-                        cacheSv.buscarCache(buscar).getConteudo();
+                        result.getConteudo();
                     } else {
                         result = sv.buscarNode(buscar);
                         if (result != null) {

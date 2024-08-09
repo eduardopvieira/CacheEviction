@@ -127,8 +127,10 @@ public class Servidor {
         return rotacaoEsquerdaSimples(no);
     }
 
-    public void remover(int ch) {
+    public Node remover(int ch) {
+        Node[] removido = new Node[1];
         raiz = remover(raiz, ch);
+        return removido[0];
     }
 
     private Node remover(Node no, int ch) {
@@ -173,7 +175,7 @@ public class Servidor {
              * Menor chave da subárvore direita do nó
              */
             else {
-                Node antigo = no;
+
                 Node temp = menorChave(no.dir);
                 no.setCodigo(temp.getCodigo());
                 no.setOS(temp.getOS());
@@ -192,7 +194,7 @@ public class Servidor {
         int fbSubOrdServEsq = ObterFB(no.esq);
         int fbSubOrdServDir = ObterFB(no.dir);
 
-        // Rotação direita simples//
+        // Rotação direita simples
         if (fb > 1 && fbSubOrdServEsq >= 0) {
             no.setRotacao("Rotação direita simples");
             return rotacaoDireitaSimples(no);
