@@ -1,4 +1,5 @@
 package Classes;
+
 import Exception.MyException;
 
 public class Servidor {
@@ -7,7 +8,8 @@ public class Servidor {
     int qtdNos;
     int alturaArv;
 
-    public Servidor() {}
+    public Servidor() {
+    }
 
     public void inserir(Node no) throws MyException {
         raiz = inserir(raiz, no);
@@ -28,41 +30,43 @@ public class Servidor {
 
         else if (cod > arv.getCodigo()) {
             arv.dir = inserir(arv.dir, no);
-        }
-        else {
+        } else {
             return arv;
         }
 
         arv.setAlturaNo(1 + maior(altura(arv.esq), altura(arv.dir)));
 
-        //Calculando fator de balanceamento (fb)
+        // Calculando fator de balanceamento (fb)
         int fb = ObterFB(arv);
         int fbSubNoEsq = ObterFB(arv.esq);
         int fbSubNoDir = ObterFB(arv.dir);
 
-        //Rotação direita simples//
+        // Rotação direita simples//
         if (fb > 1 && fbSubNoEsq >= 0) {
+            no.setRotacao("Rotação direita simples");
             return rotacaoDireitaSimples(arv);
         }
 
-        //Rotação esquerda simples
+        // Rotação esquerda simples
         if (fb < -1 && fbSubNoDir <= 0) {
+            no.setRotacao("Rotação esquerda simples");
             return rotacaoEsquerdaSimples(arv);
         }
 
-        //Rotação dupla direita
+        // Rotação dupla direita
         if (fb > 1 && fbSubNoEsq < 0) {
+            no.setRotacao("Rotação dupla direita");
             rotacaoDireitaDupla(arv);
         }
 
-        //Rotação dupla esquerda
+        // Rotação dupla esquerda
         if (fb < -1 && fbSubNoDir > 0) {
+            no.setRotacao("Rotação dupla esquerda");
             rotacaoEsquerdaDupla(arv);
         }
 
         return arv;
     }
-
 
     private int altura(Node no) {
         if (no == null) {
@@ -84,8 +88,8 @@ public class Servidor {
     }
 
     private Node rotacaoDireitaSimples(Node x) {
-        Node y = x.esq;  //Nó a esquerda do X passado como parametro
-        Node z = y.dir;  //Nó a direita do Y anterior
+        Node y = x.esq; // Nó a esquerda do X passado como parametro
+        Node z = y.dir; // Nó a direita do Y anterior
 
         y.dir = x;
         x.esq = z;
@@ -97,18 +101,18 @@ public class Servidor {
     }
 
     private Node rotacaoEsquerdaSimples(Node x) {
-        Node y = x.dir; //Nó a direita do X passado como parametro
-        Node z = y.esq; //Node a esquerda do nó anterior
+        Node y = x.dir; // Nó a direita do X passado como parametro
+        Node z = y.esq; // Node a esquerda do nó anterior
 
         y.esq = x;
         x.dir = z;
 
-        //Atualizar as alturas
+        // Atualizar as alturas
 
         x.setAlturaNo(maior(altura(x.esq), altura(x.dir)) + 1);
         y.setAlturaNo(maior(altura(y.esq), altura(y.dir)) + 1);
 
-        //y vai ser a nova raiz, entao retornar y.
+        // y vai ser a nova raiz, entao retornar y.
         return y;
     }
 
@@ -122,12 +126,13 @@ public class Servidor {
         return rotacaoEsquerdaSimples(no);
     }
 
-    public void remover (int ch) {
+    public void remover(int ch) {
         raiz = remover(raiz, ch);
     }
+
     private Node remover(Node no, int ch) {
 
-        //percorrendo a arvore
+        // percorrendo a arvore
         if (no == null) {
             return no;
         }
@@ -142,75 +147,82 @@ public class Servidor {
 
         else {
 
-            //CASO SEJA O NÓ ALVO E ELE NAO TEM FILHOS
+            // CASO SEJA O NÓ ALVO E ELE NAO TEM FILHOS
 
             if (no.esq == null && no.dir == null) {
                 no = null;
             }
 
-            //NÓ SÓ TEM FILHO A DIREITA
+            // NÓ SÓ TEM FILHO A DIREITA
             else if (no.esq == null) {
                 Node temp = no;
                 no = temp.dir;
                 temp = null;
             }
 
-            //Node SO TEM FILHO A ESQUERDA
+            // Node SO TEM FILHO A ESQUERDA
             else if (no.dir == null) {
                 Node temp = no;
                 no = temp.esq;
                 temp = null;
             }
 
-            /*Nó com 2 filhos: pegue o sucessor do percurso em ordem
-              Menor chave da subárvore direita do nó */
-              else {
+            /*
+             * Nó com 2 filhos: pegue o sucessor do percurso em ordem
+             * Menor chave da subárvore direita do nó
+             */
+            else {
                 Node temp = menorChave(no.dir);
                 no.setCodigo(temp.getCodigo());
                 no.setOS(temp.getOS()); // Atualize também o conteúdo
                 no.dir = remover(no.dir, temp.getCodigo());
-                
-                // Node temp = menorChave(no.dir);
-
-                // no.setCodigo(temp.getCodigo());
-                // temp.setCodigo(ch);
-
-                // no.dir = remover(no.dir, ch);
             }
         }
-        if(no == null) {
+
+        if (no == null) {
             return no;
         }
 
         no.setAlturaNo(1 + maior(altura(no.esq), altura(no.dir)));
 
-        //Calculando fator de balanceamento (fb)
+        // Calculando fator de balanceamento (fb)
         int fb = ObterFB(no);
         int fbSubOrdServEsq = ObterFB(no.esq);
         int fbSubOrdServDir = ObterFB(no.dir);
 
-        //Rotação direita simples//
+        // Rotação direita simples//
         if (fb > 1 && fbSubOrdServEsq >= 0) {
+            no.setRotacao("Rotação direita simples");
             return rotacaoDireitaSimples(no);
         }
 
-        //Rotação esquerda simples
+        // Rotação esquerda simples
         if (fb < -1 && fbSubOrdServDir <= 0) {
+            no.setRotacao("Rotação esquerda simples");
             return rotacaoEsquerdaSimples(no);
         }
 
-        //Rotação dupla direita
+        // Rotação dupla direita
         if (fb > 1 && fbSubOrdServEsq < 0) {
+            no.setRotacao("Rotação dupla direita");
             rotacaoDireitaDupla(no);
         }
 
-        //Rotação dupla esquerda
+        // Rotação dupla esquerda
         if (fb < -1 && fbSubOrdServDir > 0) {
+            no.setRotacao("Rotação dupla esquerda");
             rotacaoEsquerdaDupla(no);
         }
 
         return no;
 
+    }
+
+    public int contarNos(Node no) {
+        if (no == null) {
+            return 0;
+        }
+        return 1 + contarNos(no.esq) + contarNos(no.dir);
     }
 
     public Node menorChave(Node no) {
@@ -230,7 +242,7 @@ public class Servidor {
     }
 
     private void ordem(Node no) {
-        if(no != null) {
+        if (no != null) {
             ordem(no.esq);
             no.getConteudo();
             ordem(no.dir);
@@ -254,12 +266,12 @@ public class Servidor {
         return buscarNode(raiz, cod);
     }
 
-    private Node buscarNode(Node arv, int cod){
+    private Node buscarNode(Node arv, int cod) {
         if (arv == null) {
             return null;
         }
-        
-        if(cod > arv.getCodigo()) {
+
+        if (cod > arv.getCodigo()) {
             return buscarNode(arv.dir, cod);
         } else if (cod < arv.getCodigo()) {
             return buscarNode(arv.esq, cod);

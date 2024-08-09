@@ -7,12 +7,15 @@ public class Node {
     private int alturaNo;
     Node esq;
     Node dir;
+    private String rotacao;
 
-    public Node() {}
+    public Node() {
+    }
 
     public Node(int codigo, OS cont) {
         this.codigo = codigo;
         this.cont = cont;
+        this.rotacao = "Nenhuma";
     }
 
     public void getConteudo() {
@@ -21,7 +24,7 @@ public class Node {
         System.out.println("Descrição: " + this.cont.getDescricao());
         System.out.println("Altura: " + this.getAlturaNo() + " || Hora: " + this.cont.getHora());
     }
-    
+
     public int getCodigo() {
         return this.codigo;
     }
@@ -44,6 +47,16 @@ public class Node {
 
     public void setOS(OS os) {
         this.cont = os;
+    }
+
+    public String getRotacao() {
+        return this.rotacao;
+    }
+
+    public void setRotacao(String rotacao) {
+        if (this.rotacao.equals("Nenhuma")) { // só vai trocar a primeira vez
+            this.rotacao = rotacao;
+        }
     }
 
 }
