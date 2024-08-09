@@ -1,18 +1,13 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=
-Operacao: Remoção no node de codigo 7
-Houve rotacao?: Nenhuma
-Altura da arvore: 2
-Cache: 
+Operacao: Inserção no node de codigo 9
+Houve rotacao?: Rotação esquerda simples
+Altura da arvore: 3
+Cache: [9]
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=
-Operacao: Remoção no node de codigo 8
+Operacao: Remoção no node de codigo 9
 Houve rotacao?: Nenhuma
-Altura da arvore: 2
-Cache: 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=
-Operacao: Remoção no node de codigo 7
-Houve rotacao?: Nenhuma
-Altura da arvore: 2
-Cache: 
+Altura da arvore: 3
+Cache: [9]
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=
 Operacao: Remoção no node de codigo 7
 Houve rotacao?: Nenhuma

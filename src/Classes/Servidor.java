@@ -7,6 +7,7 @@ public class Servidor {
     Node raiz = null;
     int qtdNos;
     int alturaArv;
+    Logger logger = new Logger();
 
     public Servidor() {
     }
@@ -172,9 +173,10 @@ public class Servidor {
              * Menor chave da subárvore direita do nó
              */
             else {
+                Node antigo = no;
                 Node temp = menorChave(no.dir);
                 no.setCodigo(temp.getCodigo());
-                no.setOS(temp.getOS()); // Atualize também o conteúdo
+                no.setOS(temp.getOS());
                 no.dir = remover(no.dir, temp.getCodigo());
             }
         }
