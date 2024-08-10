@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Cache {
     ArrayList<Node> cache;
-    int capacidade = 3;
+    int capacidade = 20;
 
     public Cache() {
         this.cache = new ArrayList<>();
@@ -20,16 +20,16 @@ public class Cache {
     }
 
     public void addCache(Node novoElemento) {
-        // Verifica se o nó já está na cache
+        // verifica se o nó já ta na cache
         if (buscarCache(novoElemento.getCodigo()) != null) {
             // Se já estiver na cache, não faz nada
             return;
         }
 
         if (cache.size() >= capacidade) {
-            cache.removeFirst(); // Remove o primeiro elemento se a capacidade for atingida
+            cache.removeFirst(); // removendo o primeiro elemento se a capacidade for atingida
         }
-        cache.addLast(novoElemento); // Adiciona o novo elemento
+        cache.addLast(novoElemento); // adiciona o novo elemento no fim
     }
 
     public void removeCache(int codigo) {

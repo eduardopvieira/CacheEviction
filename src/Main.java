@@ -11,7 +11,7 @@ public class Main {
         Cliente cli = new Cliente(baseDados);
 
         // Loop para criar e inserir 60 dados
-        for (int i = 1; i <= 8; i++) {
+        for (int i = 1; i <= 60; i++) {
             // Cria um nome de operação fictício
             String nome = "Operação " + i;
 

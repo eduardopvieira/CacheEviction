@@ -85,7 +85,7 @@ public class Servidor {
             return 0;
         }
 
-        return altura(no.esq) - altura(no.dir);
+        return (altura(no.esq) - altura(no.dir));
     }
 
     private Node rotacaoDireitaSimples(Node x) {
@@ -127,10 +127,8 @@ public class Servidor {
         return rotacaoEsquerdaSimples(no);
     }
 
-    public Node remover(int ch) {
-        Node[] removido = new Node[1];
+    public void remover(int ch) {
         raiz = remover(raiz, ch);
-        return removido[0];
     }
 
     private Node remover(Node no, int ch) {
@@ -150,35 +148,29 @@ public class Servidor {
 
         else {
 
-            // CASO SEJA O NÓ ALVO E ELE NAO TEM FILHOS
-
+            // nó sem filhos?
             if (no.esq == null && no.dir == null) {
                 no = null;
             }
 
-            // NÓ SÓ TEM FILHO A DIREITA
+            // nó so tem filho a direita?
             else if (no.esq == null) {
-                Node temp = no;
-                no = temp.dir;
-                temp = null;
+                no = no.dir;
             }
 
-            // Node SO TEM FILHO A ESQUERDA
+            // nó so tem filho a esquerda?
             else if (no.dir == null) {
-                Node temp = no;
-                no = temp.esq;
-                temp = null;
+                no = no.esq;
             }
 
-            /*
-             * Nó com 2 filhos: pegue o sucessor do percurso em ordem
-             * Menor chave da subárvore direita do nó
-             */
+            // nó tem os 2 filhos?
             else {
 
                 Node temp = menorChave(no.dir);
+
                 no.setCodigo(temp.getCodigo());
                 no.setOS(temp.getOS());
+
                 no.dir = remover(no.dir, temp.getCodigo());
             }
         }
@@ -200,16 +192,16 @@ public class Servidor {
             return rotacaoDireitaSimples(no);
         }
 
-        // Rotação esquerda simples
-        if (fb < -1 && fbSubOrdServDir <= 0) {
-            no.setRotacao("Rotação esquerda simples");
-            return rotacaoEsquerdaSimples(no);
-        }
-
         // Rotação dupla direita
         if (fb > 1 && fbSubOrdServEsq < 0) {
             no.setRotacao("Rotação dupla direita");
             rotacaoDireitaDupla(no);
+        }
+
+        // Rotação esquerda simples
+        if (fb < -1 && fbSubOrdServDir <= 0) {
+            no.setRotacao("Rotação esquerda simples");
+            return rotacaoEsquerdaSimples(no);
         }
 
         // Rotação dupla esquerda
@@ -249,6 +241,18 @@ public class Servidor {
         if (no != null) {
             ordem(no.esq);
             no.getConteudo();
+            ordem(no.dir);
+        }
+    }
+
+    public void preOrdem() {
+        this.preOrdem(getRaiz());
+    }
+
+    private void preOrdem(Node no) {
+        if (no != null) {
+            no.getConteudo();
+            ordem(no.esq);
             ordem(no.dir);
         }
     }

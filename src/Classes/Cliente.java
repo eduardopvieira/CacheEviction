@@ -41,7 +41,7 @@ public class Cliente {
                     sc.nextLine();
 
                     if (sv.buscarNode(codigo) != null) {
-                        throw new MyException("Esse código já existe na base de dados.");
+                        System.out.println("Esse código já existe na base de dados.");
                     } else {
                         System.out.println("Digite o nome da operação: ");
                         String nome = sc.nextLine();
@@ -65,7 +65,7 @@ public class Cliente {
 
                 case 2:
                     System.out.println("Listando todos os OS: ");
-                    sv.ordem();
+                    sv.preOrdem();
                     break;
 
                 case 3:
@@ -120,10 +120,11 @@ public class Cliente {
                         OS newOs = new OS(newNome, newDesc, newHora);
                         // Node newNode = new Node(newCod, newOs);
                         alter.setOS(newOs);
-                        cacheSv.addCache(alter);
                         System.out.println("Alteração realizada com sucesso.");
                         break;
                     }
+                    System.out.println("Nenhum OS encontrado com esse código.");
+                    break;
 
                 case 4:
                     System.out.println("Digite o código do OS a ser removido: ");
@@ -137,9 +138,6 @@ public class Cliente {
 
                         // removendo da cache usando o codigo do node
                         cacheSv.removeCache(remov);
-
-                        // SÓ PRA VER SE FOI REMOVIDO, USADO PRA FINS DE DEBUG
-                        // cacheSv.printarCache();
 
                         // Log da operação
                         logger.log("Remoção", removido.getRotacao(), sv.raiz.getAlturaNo(), removido.getCodigo(),
