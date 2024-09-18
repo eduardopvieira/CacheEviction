@@ -7,7 +7,7 @@ import Exception.MyException;
 public class Main {
     public static void main(String[] args) throws MyException {
 
-        TabelaHash baseDados = new TabelaHash(20);
+        TabelaHash baseDados = new TabelaHash(2);
         TabelaHash cache = new TabelaHash(20);
         //Cliente cli = new Cliente(baseDados);
 
