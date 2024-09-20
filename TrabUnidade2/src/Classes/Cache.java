@@ -1,19 +1,13 @@
 package Classes;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Random;
 
 public class Cache {
     
     private TabelaHash cache;
-    private int capacidade;
-    
 
-    public Cache () {}
-
-    public Cache (int capacidade) {
-        this.capacidade = capacidade;
-        cache = new TabelaHash(capacidade);
+    public Cache () {
+        cache = new TabelaHash(20);
     }
 
 
@@ -29,17 +23,28 @@ public class Cache {
         if (buscarCache(novoElemento.getKey()) != null) {
             return;
         }
+        if (cache.size() == 20) {
+            //tirar um elemento aleatorio atualmente na cache
+            Random rand = new Random();
+            int indiceAleatorio = rand.nextInt(20);
+            while (buscarCache(indiceAleatorio) != null) {
+                indiceAleatorio = rand.nextInt(20);
+            }
+
+            removeCache(cache[i]);
+        }
         cache.inserir(novoElemento);
     }
 
 
 
 
-    public void removeCache(int codigo) {
+    public Node removeCache(int codigo) {
         Node no = cache.remover(codigo);
         if (no != null) {
-            //TODO -> função pra adicionar outro valor quando esse sair
+            System.out.println("Elemento removido do cache: " + no.getKey());
         }
+        return no;
     }
 
 
