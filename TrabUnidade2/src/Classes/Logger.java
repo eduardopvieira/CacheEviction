@@ -16,7 +16,7 @@ public class Logger {
         // MÉTODO PRA COLOCAR OS CÓDIGOS DOS NÓS DA CACHE EM UMA STRING
         StringBuilder cacheString = new StringBuilder();
         for (Node node : cache) {
-            cacheString.append("[").append(node.getCodigo()).append("]");
+            cacheString.append("[").append(node.getKey()).append("]");
         }
 
         String stringFinal = cacheString.toString();
