@@ -2,16 +2,13 @@ package Classes;
 
 import Exception.MyException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Cliente {
 
-    Servidor sv = new Servidor(5);
-    Logger logger = new Logger();
+    Servidor sv;
     Cache cacheSv = new Cache();
+    
 
     public Cliente() {
     }
@@ -21,10 +18,11 @@ public class Cliente {
     }
 
     public void comecarSimulacao() throws MyException {
+        Logger logger = new Logger(this.sv, cacheSv);
         inicializacao();
 
         int decisao = 0;
-        while (decisao != 10) {
+        while (decisao != 9) {
 
             System.out.println("================ INTERFACE ================");
             System.out.println("[1] - Cadastrar OS");
@@ -65,23 +63,20 @@ public class Cliente {
                         Node no = new Node(codigo, os);
     
                         sv.inserir(no);
-                        // logger.log("Inserção", no.getRotacao(), sv.raiz.getAlturaNo(), no.getCodigo(),
-                        //         cacheSv.cache);
+
                         System.out.println("OS cadastrado com sucesso.");
-                        System.out.println("Cache: ");
-                        cacheSv.printarCache();
                     } else {
                         System.out.println("O código digitado já existe na base de dados.");
                     }
+                    logger.log();
                     break;
                     
                     
                 case 2:
                     System.out.println("Listando todos os OS: ");
-                    //sv.listarElementos();
-                    sv.tabela.imprimirTabelaHash();
+                    sv.tabela.listarElementos();
+                    logger.log();
                     break;
-
 
                 case 3:
                     System.out.println("Digite o código do OS a ser alterado: ");
@@ -135,6 +130,7 @@ public class Cliente {
                         OS newOs = new OS(newNome, newDesc, newHora);
                         alter.setOS(newOs);
                         System.out.println("Alteração realizada com sucesso.");
+                        logger.log();
                         break;
                     }
                     System.out.println("Nenhum OS encontrado com esse código.");
@@ -157,14 +153,10 @@ public class Cliente {
                             adicionarRandomCache();
                         }
 
-                        // Log da operação
-                        // logger.log("Remoção", removido.getRotacao(), sv.raiz.getAlturaNo(), removido.getCodigo(),
-                        //         cacheSv.cache);
                     } else {
                         System.out.println("Nenhum OS encontrado com esse código.");
                     }
-                    System.out.println("Cache: ");
-                    cacheSv.printarCache();
+                    logger.log();
                     break;
 
                 case 5:
@@ -183,8 +175,8 @@ public class Cliente {
                         cacheSv.addCache(retorno);
                     }
 
-                    System.out.println("Cache: ");
-                    cacheSv.printarCache();
+                    logger.log();
+
                     break;
 
                 case 7:
@@ -193,6 +185,7 @@ public class Cliente {
                     break;
 
                 case 8:
+                    System.out.println("Cache:");
                     cacheSv.printarCache();
                     break;
                 
