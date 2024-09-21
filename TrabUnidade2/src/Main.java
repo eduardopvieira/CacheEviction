@@ -1,8 +1,5 @@
 import Classes.Cliente;
-import Classes.Node;
-import Classes.OS;
 import Classes.Servidor;
-import Classes.TabelaHash;
 import Exception.MyException;
 
 public class Main {
