@@ -3,39 +3,59 @@ package Classes;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Logger {
-    private static String path = "src/log.txt";
 
-    public Logger() {
+    Servidor baseDados;
+    Cache cache;
+
+    private static String path = "log.txt";
+
+    public Logger(Servidor server, Cache cach) {
+        this.baseDados = server;
+        this.cache = cach;
     }
 
-    public void log(String operacao, String rotacao, int altura, int cod, ArrayList<Node> cache) {
+    public void log() {
+        StringBuilder logString = new StringBuilder();
 
-        // MÉTODO PRA COLOCAR OS CÓDIGOS DOS NÓS DA CACHE EM UMA STRING
-        StringBuilder cacheString = new StringBuilder();
-        for (Node node : cache) {
-            cacheString.append("[").append(node.getKey()).append("]");
+        logString.append("Tabela Hash:\n");
+        for (int i = 0; i < baseDados.tabela.M; i++) {
+            logString.append("[ ").append(i).append(" ] --> ");
+            LinkedList<Node> lista = baseDados.tabela.tabela[i];
+            if (lista.isEmpty()) {
+                logString.append("null\n");
+            } else {
+                for (Node node : lista) {
+                    logString.append(node.getKey()).append(" ");
+                }
+                logString.append("\n");
+            }
         }
+        logString.append("\n");
 
-        String stringFinal = cacheString.toString();
+        // Logando a Cache
+        logString.append("Cache:\n");
+        for (int i = 0; i < 20; i++) {
+            logString.append("[ ").append(i).append(" ] --> ");
+            LinkedList<Node> lista = cache.getCache().tabela[i];
+            if (lista.isEmpty()) {
+                logString.append("null\n");
+            } else {
+                for (Node node : lista) {
+                    logString.append(node.getKey()).append(" ");
+                }
+                logString.append("\n");
+            }
+        }
+        logString.append("\n");
 
-        // MENSAGEM DO LOG
-        String message = String.format(
-                "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=\n" +
-                        "Operacao: %s no node de codigo %d\n" +
-                        "Houve rotacao?: %s\n" +
-                        "Altura da arvore: %d\n" +
-                        "Cache: %s\n",
-                operacao, cod, rotacao, altura, stringFinal);
 
         // ESCREVE NO ARQUIVO
-        try {
-            FileWriter fw = new FileWriter(path, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(message);
-            bw.close();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
+            bw.write(logString.toString());
+            bw.write("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
