@@ -6,7 +6,7 @@ import java.util.Random;
 public class TabelaHash {
 
 	int M; // tamanho da tabela
-	int n; //numero de elementos na tabela
+	int n; // numero de elementos na tabela
 	LinkedList<Node>[] tabela;
 
 	public TabelaHash(int tam) {
@@ -20,12 +20,10 @@ public class TabelaHash {
 		}
 	}
 
-	
-	// vo ter q fzr a funçao hash pro esquema aqui
+	// funçao hash pro esquema aqui
 	public int hash(int ch) {
 		return ch % this.M;
 	}
-
 
 	public void inserir(Node no) {
 		int h = this.hash(no.getKey());
@@ -38,12 +36,10 @@ public class TabelaHash {
 			}
 		}
 
-		// se viu que já nao ta, adiciona o novo valor na lista encadeada <3
+		// se viu que já nao ta, adiciona o novo valor na lista encadeada
 		n++;
 		lista.add(no);
 	}
-
-
 
 	public Node buscar(int v) {
 		int h = this.hash(v); // calcula o indice pra ver a linkedlist correspondente
@@ -59,27 +55,21 @@ public class TabelaHash {
 		return null;
 	}
 
-
-	//! Função original, explicar no video
-
 	public Node remover(int v) {
 		int valor = hash(v);
 		LinkedList<Node> lista = this.tabela[valor];
 
-		for(Node node : lista) {
+		for (Node node : lista) {
 			if (node.getKey() == v) {
-				lista.remove(node); //remove da linkedlist
+				lista.remove(node); // remove da linkedlist
 				n--;
-				return node; //retorna o removido
+				return node; // retorna o removido
 			}
 		}
 
-		//nao achou eh pq nao existe
+		// nao achou eh pq nao existe
 		return null;
 	}
-
-
-
 
 	// printando a tabela hash
 	public void imprimirTabelaHash() {
@@ -100,12 +90,11 @@ public class TabelaHash {
 
 	void listarElementos() {
 		for (int i = 0; i < M; i++) {
-			for ( Node no : tabela[i]) {
+			for (Node no : tabela[i]) {
 				printarNode(no);
 			}
 		}
 	}
-
 
 	public double fatorDeCarga() {
 		System.out.println("Valor de n: " + n);
@@ -116,12 +105,12 @@ public class TabelaHash {
 	}
 
 	void resize(boolean aumentar) {
-		
+
 		System.out.println("TABELA ATUAL: ");
 		imprimirTabelaHash();
 
 		System.out.println("REDIMENSIONANDO!!!!!");
-		
+
 		LinkedList<Node>[] temp = tabela;
 		if (aumentar) {
 			M = proxPrimo(M * 2);
@@ -129,14 +118,14 @@ public class TabelaHash {
 			M = primoAnterior(M / 2);
 		}
 		tabela = new LinkedList[M];
-		
+
 		for (int i = 0; i < M; i++) {
 			tabela[i] = new LinkedList<>();
 		}
 
-		for (LinkedList<Node> lista: temp) {
+		for (LinkedList<Node> lista : temp) {
 			if (lista != null) {
-				for (Node no: lista) {
+				for (Node no : lista) {
 					inserir(no);
 				}
 			}
@@ -160,18 +149,20 @@ public class TabelaHash {
 			}
 			numero--;
 		}
-		return 2; //se nao encontrar nenhum primo, retorna 2 q é o menor possivel
+		return 2; // se nao encontrar nenhum primo, retorna 2 q é o menor possivel
 	}
-	
+
 	boolean ehPrimo(int numero) {
-		if (numero <= 1) return false;
+		if (numero <= 1)
+			return false;
 		for (int i = 2; i <= Math.sqrt(numero); i++) {
-			if (numero % i == 0) return false;
+			if (numero % i == 0)
+				return false;
 		}
 		return true;
 	}
 
-	void printarNode(Node no) { 
+	void printarNode(Node no) {
 		System.out.println("=================");
 		System.out.println("Código: " + no.getKey());
 		System.out.println("Nome: " + no.getOS().getNome());
@@ -179,41 +170,35 @@ public class TabelaHash {
 		System.out.println("Hora: " + no.getOS().getHora());
 	}
 
-
 	public Node sortearElemento() {
-        Random rand = new Random();
-        Node noSorteado = null;
+		Random rand = new Random();
+		Node noSorteado = null;
 
-		//EQNUANTO O NO SORTEADO FOR NULO:
-        while (noSorteado == null) {
+		// EQNUANTO O NO SORTEADO FOR NULO:
+		while (noSorteado == null) {
 
-            // PRIMEIRO PASSO: SORTEIA UM NUMERO DENTRO DO TAMANHO M DO MEU VETOR
-            int indiceTabela = rand.nextInt(M);
-            
+			// PRIMEIRO PASSO: SORTEIA UM NUMERO DENTRO DO TAMANHO M DO MEU VETOR
+			int indiceTabela = rand.nextInt(M);
+
 			LinkedList<Node> lista = tabela[indiceTabela]; // PEGA A LISTA SORTEADA
 
-            // VERIFICA SE ELA TA VAZIA
-            if (!lista.isEmpty()) {
-                //3: SE NAO ESTIVER....
-                int indiceLista = rand.nextInt(lista.size()); // SORTEIA UM NUMERO DENTRO DA LISTA
-                noSorteado = lista.get(indiceLista); // PEGA O NO SORTEADO
-            }
-			//SE ESTIVER VAZIA, NO SORTEADO É NULO E COMEÇA DNV
-        }
+			// VERIFICA SE ELA TA VAZIA
+			if (!lista.isEmpty()) {
+				// 3: SE NAO ESTIVER....
+				int indiceLista = rand.nextInt(lista.size()); // SORTEIA UM NUMERO DENTRO DA LISTA
+				noSorteado = lista.get(indiceLista); // PEGA O NO SORTEADO
+			}
+			// SE ESTIVER VAZIA, NO SORTEADO É NULO E COMEÇA DNV
+		}
 
-        System.out.println("Elemento sorteado: ");
-        printarNode(noSorteado);
-        
-        // Aqui você pode adicionar o elemento sorteado à cache
-        // Exemplo:
-        // cacheSv.addCache(noSorteado);
+		System.out.println("Elemento sorteado: ");
+		printarNode(noSorteado);
 
-        return noSorteado;
-    }
+		return noSorteado;
+	}
 
 	int size() {
 		return this.n;
 	}
-	
 
 }
