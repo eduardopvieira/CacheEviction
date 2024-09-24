@@ -104,6 +104,15 @@ public class TabelaHash {
 		return fator;
 	}
 
+	public int contarNos() {
+		int count = 0;
+		for (int i = 0; i < this.M; i++) {
+			count += this.tabela[i].size(); // soma o tamanho de cada LinkedList
+		}
+		return count;
+	}
+	
+
 	void resize(boolean aumentar) {
 
 		System.out.println("TABELA ATUAL: ");
@@ -132,6 +141,7 @@ public class TabelaHash {
 		}
 
 		temp = null;
+		n = contarNos();
 
 	}
 
