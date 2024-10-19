@@ -4,7 +4,7 @@ public class KMP {
 
     int tabelaPrefixo[]; //array da tabela de prefixos
 
-    void buscar(String padrao, String texto) {
+    public void buscar(String padrao, String texto) {
         int M = padrao.length();
         int N = texto.length ();
         tabelaPrefixo = new int[M];
