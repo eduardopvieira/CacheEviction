@@ -1,4 +1,6 @@
-package Classes;
+package Testes;
+
+import Classes.KMP;
 
 public class TesteKMP {
 

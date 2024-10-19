@@ -1,4 +1,6 @@
-package Huffman;
+package Testes;
+
+import Huffman.ArvoreHuffman;
 
 class TesteHuffman {
     
