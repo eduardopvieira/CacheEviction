@@ -46,8 +46,32 @@ public class ListaAutoAjustavel {
         }
     }
 
+    public void remover(int ch) {
+        int index = -1;
+        
+        // Procurar o índice do elemento com a chave fornecida
+        for (int i = 0; i < tamAtual; i++) {
+            if (lista[i].getKey() == ch) {
+                index = i;
+                break;
+            }
+        }
+
+        // Se o elemento for encontrado, remover e ajustar a lista
+        if (index != -1) {
+            for (int i = index; i < tamAtual - 1; i++) {
+                lista[i] = lista[i + 1];  // Move os elementos subsequentes para preencher o espaço
+            }
+            lista[tamAtual - 1] = null;  // Opcional: Limpar o último elemento
+            tamAtual--;
+            System.out.println("Elemento de chave " + ch + " removido da lista auto ajustavel");
+        } else {
+            System.out.println("Chave não encontrada");
+        }
+    }
+
     // Método para exibir a lista
-    void imprimir() {
+    public void imprimir() {
         System.out.println("--- Lista Atual ---");
         for(int i = 0; i < tamAtual; i++) {
             System.out.println(lista[i].getKey() + " ");
