@@ -34,4 +34,10 @@ public class OS {
 
     public void setHora(String hora) {this.hora = hora;}
 
+    public String gerarMensagemOS() {
+        return "Nome: " + this.nome +
+        "Descricao: " + this.descricao +
+        "Hora: " + this.hora; 
+    }
+
 }

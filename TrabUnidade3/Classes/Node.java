@@ -30,4 +30,15 @@ public class Node {
         this.cont = os;
     }
 
+    public String gerarMensagem() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Chave: ").append(this.key);
+        
+        if (this.cont != null) {
+            sb.append(", OS: ").append(this.cont.gerarMensagemOS());
+        }
+
+        return sb.toString();
+    }
+
 }
