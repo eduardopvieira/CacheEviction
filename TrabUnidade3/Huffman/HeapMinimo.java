@@ -1,6 +1,5 @@
 package Huffman;
 
-import Huffman.NodeHuffman;
 import java.util.ArrayList;
 import java.util.List;
 
