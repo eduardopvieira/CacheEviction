@@ -1,214 +1,213 @@
 package Classes;
 
-import java.util.LinkedList;
 import java.util.Random;
 
 public class TabelaHash {
 
-	int M; // tamanho da tabela
-	int n; // numero de elementos na tabela
-	LinkedList<Node>[] tabela;
+    int M; // tamanho da tabela
+    int n; // número de elementos na tabela
+    ListaAutoAjustavel[] tabela;
 
-	public TabelaHash(int tam) {
-		this.M = tam;
-		this.n = 0;
-		this.tabela = new LinkedList[this.M];
+    public TabelaHash(int tam) {
+        this.M = tam;
+        this.n = 0;
+        this.tabela = new ListaAutoAjustavel[this.M];
 
-		// inicializa cada posição da tabela com uma lista encadeada vazia
-		for (int i = 0; i < this.M; i++) {
-			this.tabela[i] = new LinkedList<>();
-		}
+        // inicializa cada posição da tabela com uma ListaAutoAjustavel
+        for (int i = 0; i < this.M; i++) {
+            this.tabela[i] = new ListaAutoAjustavel(tam); // Define o tamanho máximo da lista ajustável
+        }
+    }
+
+    // Função hash
+    public int hash(int ch) {
+        return ch % this.M;
+    }
+
+    // Inserir elemento na tabela hash
+    public void inserir(Node no) {
+        int h = this.hash(no.getKey());
+        ListaAutoAjustavel lista = this.tabela[h];
+
+        // Verifica se o valor já está inserido (não aceita duplicatas)
+        if (lista.buscar(no.getKey()) != null) {
+            return; // Valor já existe, não insere novamente
+        }
+
+        // Se não encontrou, adiciona o novo valor na ListaAutoAjustavel
+        n++;
+        lista.inserir(no.getKey(), no.getOS());
+    }
+
+    // Buscar elemento na tabela hash
+    public Node buscar(int v) {
+        int h = this.hash(v);
+        ListaAutoAjustavel lista = this.tabela[h];
+
+        // Busca o valor na lista autoajustável
+        OS os = lista.buscar(v);
+        if (os != null) {
+            return new Node(v, os); // Retorna o node se encontrado
+        }
+
+        return null; // Se não encontrado
+    }
+
+    // Remover elemento da tabela hash
+    public Node remover(int v) {
+        int h = this.hash(v);
+        ListaAutoAjustavel lista = this.tabela[h];
+
+        // Remover o valor da lista autoajustável
+        OS os = lista.buscar(v);
+        if (os != null) {
+            lista.remover(v); // Remove da lista autoajustável
+            n--;
+            return new Node(v, os); // Retorna o node removido
+        }
+
+        return null; // Se não encontrado
+    }
+
+    // Imprimir a tabela hash
+    public void imprimirTabelaHash() {
+        for (int i = 0; i < this.M; i++) {
+            System.out.print("[ " + i + " ] --> ");
+            tabela[i].imprimir();
+        }
+    }
+
+    // Fator de carga
+    public double fatorDeCarga() {
+        System.out.println("Valor de n: " + n);
+        System.out.println("Valor de M: " + M);
+        double fator = (double) n / M;
+        System.out.println("Fator de carga atual: " + fator);
+        return fator;
+    }
+
+    // Contar elementos da tabela
+    public int contarNos() {
+        int count = 0;
+        for (int i = 0; i < this.M; i++) {
+            count += tabela[i].size(); // Usa o método size da ListaAutoAjustavel
+        }
+        return count;
+    }
+
+    // Redimensionar a tabela hash
+    void resize(boolean aumentar) {
+
+        System.out.println("TABELA ATUAL: ");
+        imprimirTabelaHash();
+
+        System.out.println("REDIMENSIONANDO!!!!!");
+
+        ListaAutoAjustavel[] temp = tabela;
+        if (aumentar) {
+            M = proxPrimo(M * 2);
+        } else {
+            M = primoAnterior(M / 2);
+        }
+        tabela = new ListaAutoAjustavel[M];
+
+        for (int i = 0; i < M; i++) {
+            tabela[i] = new ListaAutoAjustavel(M);
+        }
+
+        for (ListaAutoAjustavel lista : temp) {
+            if (lista != null) {
+                for (int i = 0; i < lista.size(); i++) {
+                    Node no = lista.getNode(i);
+                    if (no != null) {
+                        inserir(no);
+                    }
+                }
+            }
+        }
+
+        temp = null;
+        n = contarNos();
+    }
+
+    // Encontrar o próximo número primo
+    int proxPrimo(int numero) {
+        while (!ehPrimo(numero)) {
+            numero++;
+        }
+        return numero;
+    }
+
+    // Encontrar o primo anterior
+    public int primoAnterior(int numero) {
+        while (numero > 2) {
+            if (ehPrimo(numero)) {
+                return numero;
+            }
+            numero--;
+        }
+        return 2;
+    }
+
+    // Verificar se um número é primo
+    boolean ehPrimo(int numero) {
+        if (numero <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= Math.sqrt(numero); i++) {
+            if (numero % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Sortear um elemento aleatório da tabela
+    public Node sortearElemento() {
+        Random rand = new Random();
+        Node noSorteado = null;
+
+        while (noSorteado == null) {
+            int indiceTabela = rand.nextInt(M);
+
+            ListaAutoAjustavel lista = tabela[indiceTabela];
+            if (lista.size() > 0) {
+                int indiceLista = rand.nextInt(lista.size());
+                noSorteado = lista.getNode(indiceLista);
+            }
+        }
+
+        System.out.println("Elemento sorteado: ");
+        printarNode(noSorteado);
+
+        return noSorteado;
+    }
+
+    // Método auxiliar para imprimir um Node
+    void printarNode(Node no) {
+        System.out.println("=================");
+        System.out.println("Código: " + no.getKey());
+        System.out.println("Nome: " + no.getOS().getNome());
+        System.out.println("Descrição: " + no.getOS().getDescricao());
+        System.out.println("Hora: " + no.getOS().getHora());
+    }
+
+	public void listarElementos() {
+        System.out.println("=== Listando todos os elementos da Tabela Hash ===");
+        
+        for (int i = 0; i < this.M; i++) {
+            ListaAutoAjustavel lista = tabela[i];
+            if (lista.size() > 0) {
+                System.out.println("Posição [ " + i + " ]: ");
+                for (int j = 0; j < lista.size(); j++) {
+                    Node no = lista.getNode(j);
+                    if (no != null) {
+                        printarNode(no); // Imprime o conteúdo do Node
+                    }
+                }
+            } else {
+                System.out.println("Posição [ " + i + " ]: Vazia");
+            }
+        }
 	}
-
-	// funçao hash pro esquema aqui
-	public int hash(int ch) {
-		return ch % this.M;
-	}
-
-	public void inserir(Node no) {
-		int h = this.hash(no.getKey());
-		LinkedList<Node> lista = this.tabela[h];
-
-		// VERIFICA SE VALOR JA ESTÁ INSERIDO PQ A TABELA HASH NAO ACEITA DUPLICATAS
-		for (Node node : lista) {
-			if (node.getKey() == no.getKey()) {
-				return; // valor ja existe
-			}
-		}
-
-		// se viu que já nao ta, adiciona o novo valor na lista encadeada
-		n++;
-		lista.add(no);
-	}
-
-	public Node buscar(int v) {
-		int h = this.hash(v); // calcula o indice pra ver a linkedlist correspondente
-		LinkedList<Node> lista = this.tabela[h];
-
-		// buscando o valor
-		for (Node node : lista) {
-			if (node.getKey() == v) {
-				return node; // achou, brabo
-			}
-		}
-		// se nao achou eh pq nao existe
-		return null;
-	}
-
-	public Node remover(int v) {
-		int valor = hash(v);
-		LinkedList<Node> lista = this.tabela[valor];
-
-		for (Node node : lista) {
-			if (node.getKey() == v) {
-				lista.remove(node); // remove da linkedlist
-				n--;
-				return node; // retorna o removido
-			}
-		}
-
-		// nao achou eh pq nao existe
-		return null;
-	}
-
-	// printando a tabela hash
-	public void imprimirTabelaHash() {
-		for (int i = 0; i < this.M; i++) {
-			System.out.print("[ " + i + " ] --> ");
-
-			LinkedList<Node> lista = this.tabela[i];
-			if (lista.isEmpty()) {
-				System.out.println("null");
-			} else {
-				for (Node node : lista) {
-					System.out.print(node.getKey() + " ");
-				}
-				System.out.println();
-			}
-		}
-	}
-
-	void listarElementos() {
-		for (int i = 0; i < M; i++) {
-			for (Node no : tabela[i]) {
-				printarNode(no);
-			}
-		}
-	}
-
-	public double fatorDeCarga() {
-		System.out.println("Valor de n: " + n);
-		System.out.println("Valor de M: " + M);
-		double fator = (double) n / M;
-		System.out.println("Fator de carga atual: " + fator);
-		return fator;
-	}
-
-	public int contarNos() {
-		int count = 0;
-		for (int i = 0; i < this.M; i++) {
-			count += this.tabela[i].size(); // soma o tamanho de cada LinkedList
-		}
-		return count;
-	}
-	
-
-	void resize(boolean aumentar) {
-
-		System.out.println("TABELA ATUAL: ");
-		imprimirTabelaHash();
-
-		System.out.println("REDIMENSIONANDO!!!!!");
-
-		LinkedList<Node>[] temp = tabela;
-		if (aumentar) {
-			M = proxPrimo(M * 2);
-		} else {
-			M = primoAnterior(M / 2);
-		}
-		tabela = new LinkedList[M];
-
-		for (int i = 0; i < M; i++) {
-			tabela[i] = new LinkedList<>();
-		}
-
-		for (LinkedList<Node> lista : temp) {
-			if (lista != null) {
-				for (Node no : lista) {
-					inserir(no);
-				}
-			}
-		}
-
-		temp = null;
-		n = contarNos();
-
-	}
-
-	int proxPrimo(int numero) {
-		while (!ehPrimo(numero)) {
-			numero++;
-		}
-		return numero;
-	}
-
-	public int primoAnterior(int numero) {
-		while (numero > 2) {
-			if (ehPrimo(numero)) {
-				return numero;
-			}
-			numero--;
-		}
-		return 2; // se nao encontrar nenhum primo, retorna 2 q é o menor possivel
-	}
-
-	boolean ehPrimo(int numero) {
-		if (numero <= 1)
-			return false;
-		for (int i = 2; i <= Math.sqrt(numero); i++) {
-			if (numero % i == 0)
-				return false;
-		}
-		return true;
-	}
-
-	void printarNode(Node no) {
-		System.out.println("=================");
-		System.out.println("Código: " + no.getKey());
-		System.out.println("Nome: " + no.getOS().getNome());
-		System.out.println("Descrição: " + no.getOS().getDescricao());
-		System.out.println("Hora: " + no.getOS().getHora());
-	}
-
-	public Node sortearElemento() {
-		Random rand = new Random();
-		Node noSorteado = null;
-
-		// EQNUANTO O NO SORTEADO FOR NULO:
-		while (noSorteado == null) {
-
-			// PRIMEIRO PASSO: SORTEIA UM NUMERO DENTRO DO TAMANHO M DO MEU VETOR
-			int indiceTabela = rand.nextInt(M);
-
-			LinkedList<Node> lista = tabela[indiceTabela]; // PEGA A LISTA SORTEADA
-
-			// VERIFICA SE ELA TA VAZIA
-			if (!lista.isEmpty()) {
-				// 3: SE NAO ESTIVER....
-				int indiceLista = rand.nextInt(lista.size()); // SORTEIA UM NUMERO DENTRO DA LISTA
-				noSorteado = lista.get(indiceLista); // PEGA O NO SORTEADO
-			}
-			// SE ESTIVER VAZIA, NO SORTEADO É NULO E COMEÇA DNV
-		}
-
-		System.out.println("Elemento sorteado: ");
-		printarNode(noSorteado);
-
-		return noSorteado;
-	}
-
-	int size() {
-		return this.n;
-	}
-
 }
