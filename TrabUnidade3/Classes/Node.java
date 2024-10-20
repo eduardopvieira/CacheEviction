@@ -35,7 +35,7 @@ public class Node {
         sb.append("Chave: ").append(this.key);
         
         if (this.cont != null) {
-            sb.append(", OS: ").append(this.cont.gerarMensagemOS());
+            sb.append(" ").append(this.cont.gerarMensagemOS());
         }
 
         return sb.toString();
