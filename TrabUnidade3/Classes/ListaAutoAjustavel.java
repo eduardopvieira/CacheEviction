@@ -37,7 +37,7 @@ public class ListaAutoAjustavel {
         return false;
     }
 
-    // Método de transposição
+    // Método de transposição (ajusta a posição dos elementos para facilitar acessos futuros)
     private void transpor(int index) {
         if (index > 0) {
             Node temp = lista[index];
@@ -46,6 +46,7 @@ public class ListaAutoAjustavel {
         }
     }
 
+    // Método para remover um elemento da lista
     public void remover(int ch) {
         int index = -1;
         
@@ -70,10 +71,34 @@ public class ListaAutoAjustavel {
         }
     }
 
+    // Método para buscar um elemento pelo seu valor de chave
+    public OS buscar(int ch) {
+        for (int i = 0; i < tamAtual; i++) {
+            if (lista[i].getKey() == ch) {
+                transpor(i);  // Transpor o elemento para uma posição anterior
+                return lista[i].getOS();
+            }
+        }
+        return null; // Retorna null se o elemento não for encontrado
+    }
+
+    // Método para retornar o tamanho atual da lista (quantos elementos estão preenchidos)
+    public int size() {
+        return tamAtual;
+    }
+
+    // Método para retornar um Node em uma posição específica da lista
+    public Node getNode(int index) {
+        if (index >= 0 && index < tamAtual) {
+            return lista[index];
+        }
+        return null;  // Retorna null se o índice for inválido
+    }
+
     // Método para exibir a lista
     public void imprimir() {
         System.out.println("--- Lista Atual ---");
-        for(int i = 0; i < tamAtual; i++) {
+        for (int i = 0; i < tamAtual; i++) {
             System.out.println(lista[i].getKey() + " ");
         }
         System.out.println();
