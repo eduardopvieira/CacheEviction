@@ -6,9 +6,7 @@ public class Main {
 
         Servidor baseDados = new Servidor(2);
         Cliente cli = new Cliente(baseDados);
-
         cli.comecarSimulacao();
-
 
     }
 }
