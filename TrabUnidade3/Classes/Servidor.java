@@ -15,9 +15,32 @@ public class Servidor {
         return tabela.buscar(x);
     }
 
+    public DadosCompressao buscaComprimidaServer(int x) {
+        Node no = buscar(x);
+
+        if (no == null) {
+            System.out.println("Indice do node nao encontrado para compressão no servidor.");
+            return null;
+        }
+
+        ArvoreHuffman arvh = new ArvoreHuffman();
+        String msg = no.gerarMensagem();
+        char[] vetorChar = new char[msg.length()];
+        int[] vetorFreq = new int[msg.length()];
+
+        arvh.contarCaractereFrequencia(msg, vetorChar, vetorFreq);
+        arvh.construirArvore(vetorChar, vetorFreq);
+        String comprimido = arvh.comprimir(msg);
+        
+        DadosCompressao dc = new DadosCompressao(arvh, comprimido);
+        return dc;
+
+    }
+
 
     public void inserir(String msgCodificada, ArvoreHuffman arvh) {
 
+        System.out.println("MENSAGEM COMPRIMIDA: " + msgCodificada);
         String decodificada = arvh.descomprimir(msgCodificada);
 
         System.out.println("MENSAGEM DECODIFICADA: " + decodificada);
@@ -69,12 +92,53 @@ public class Servidor {
         return removido;
     }
 
+    public DadosCompressao removerComprimido (int x) {
+        
+        ArvoreHuffman arvh = new ArvoreHuffman();
+
+        Node removido = tabela.remover(x);
+        
+        if (removido == null) {
+            System.out.println("Nenhum OS com esse código foi encontrado.");
+            return null;
+        }
+
+        String msg = removido.gerarMensagem();
+        int[] arrayFreq = new int[msg.length()];
+        char[] arrayChar = new char[msg.length()];
+
+        arvh.contarCaractereFrequencia(msg, arrayChar, arrayFreq);
+        arvh.construirArvore(arrayChar, arrayFreq);
+        String comprimido = arvh.comprimir(msg);
+        
+        
+        System.out.println("OS de código " + x + " removido com sucesso!");
+
+        if (tabela.fatorDeCarga() <= 2.5) {
+            System.out.println("Sua tabela está com poucos elementos, portanto, será redimensionada para ficar menor.");
+            tabela.resize(false);
+        }
+
+        DadosCompressao retorno = new DadosCompressao(arvh, comprimido);
+
+        return retorno;
+    }
+
+
     public void listarElementos() {
         tabela.listarElementos();
     }
 
     public void printarServer() {
         tabela.imprimirTabelaHash();
+    }
+
+    public void inserirInicializacao(Node no) {
+
+        tabela.inserir(no);	
+		if (tabela.fatorDeCarga() >= 7.5) { // *"Sedgewick recomenda escolher m tal que n/m fique entre 5 e 10."
+			tabela.resize(true);
+		}
     }
 
 
