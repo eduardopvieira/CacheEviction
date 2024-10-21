@@ -11,11 +11,14 @@ public class TabelaHash {
     public TabelaHash(int tam) {
         this.M = tam;
         this.n = 0;
+        double fatorDeCargaMaximo = 7.5;
+
+        int tamLista = (int) Math.ceil(fatorDeCargaMaximo);
+        
         this.tabela = new ListaAutoAjustavel[this.M];
 
-        // inicializa cada posição da tabela com uma ListaAutoAjustavel
         for (int i = 0; i < this.M; i++) {
-            this.tabela[i] = new ListaAutoAjustavel(tam); // Define o tamanho máximo da lista ajustável
+            this.tabela[i] = new ListaAutoAjustavel(tamLista);
         }
     }
 
@@ -29,29 +32,42 @@ public class TabelaHash {
         int h = this.hash(no.getKey());
         ListaAutoAjustavel lista = this.tabela[h];
 
-        // Verifica se o valor já está inserido (não aceita duplicatas)
         if (lista.buscar(no.getKey()) != null) {
-            return; // Valor já existe, não insere novamente
+            return;
         }
-
-        // Se não encontrou, adiciona o novo valor na ListaAutoAjustavel
         n++;
-        lista.inserir(no.getKey(), no.getOS());
+        lista.inserir(no);
+        System.out.println("NO DE CHAVE " + no.getKey() + " INSERIDOOOOOO UHU    (SOUT EM INSERIR NA HASH)");
     }
 
-    // Buscar elemento na tabela hash
+
     public Node buscar(int v) {
         int h = this.hash(v);
-        ListaAutoAjustavel lista = this.tabela[h];
-
-        // Busca o valor na lista autoajustável
-        OS os = lista.buscar(v);
-        if (os != null) {
-            return new Node(v, os); // Retorna o node se encontrado
+        System.out.println("Hash calculada para " + v + ": " + h);
+        ListaAutoAjustavel lista = this.tabela[h];  // Acessar a lista autoajustável correspondente
+    
+        Node no = lista.buscar(v);
+        if (no != null) {
+            System.out.println("Elemento encontrado na tabela hash: " + no.getKey());
+            return no; // Retorna o node se encontrado
         }
-
+    
+        System.out.println("Elemento " + v + " não encontrado na tabela hash.");
         return null; // Se não encontrado
     }
+    
+
+    // public Node buscar(int v) {
+    //     int h = this.hash(v);
+    //     ListaAutoAjustavel lista = this.tabela[h];
+
+    //     Node no = lista.buscar(v);
+    //     if (no != null) {
+    //         return no;
+    //     }
+
+    //     return null;
+    // }
 
     // Remover elemento da tabela hash
     public Node remover(int v) {
@@ -59,11 +75,11 @@ public class TabelaHash {
         ListaAutoAjustavel lista = this.tabela[h];
 
         // Remover o valor da lista autoajustável
-        OS os = lista.buscar(v);
-        if (os != null) {
+        Node no = lista.buscar(v);
+        if (no != null) {
             lista.remover(v); // Remove da lista autoajustável
             n--;
-            return new Node(v, os); // Retorna o node removido
+            return no;
         }
 
         return null; // Se não encontrado
@@ -97,38 +113,44 @@ public class TabelaHash {
 
     // Redimensionar a tabela hash
     void resize(boolean aumentar) {
-
         System.out.println("TABELA ATUAL: ");
         imprimirTabelaHash();
-
+    
         System.out.println("REDIMENSIONANDO!!!!!");
-
-        ListaAutoAjustavel[] temp = tabela;
+    
+        ListaAutoAjustavel[] temp = tabela; // Armazena a tabela atual em temp
         if (aumentar) {
-            M = proxPrimo(M * 2);
+            M = proxPrimo(M * 2); // Aumenta para o próximo primo após dobrar o tamanho
         } else {
-            M = primoAnterior(M / 2);
+            M = primoAnterior(M / 2); // Diminui para o primo anterior após reduzir o tamanho pela metade
         }
+    
+        double fatorDeCargaMaximo = 7.5;
+        
+        int novoTamLista = (int) Math.ceil(fatorDeCargaMaximo); 
+    
         tabela = new ListaAutoAjustavel[M];
-
+    
         for (int i = 0; i < M; i++) {
-            tabela[i] = new ListaAutoAjustavel(M);
+            tabela[i] = new ListaAutoAjustavel(novoTamLista); // Nova lista com tamanho ajustado
         }
-
+    
         for (ListaAutoAjustavel lista : temp) {
             if (lista != null) {
                 for (int i = 0; i < lista.size(); i++) {
                     Node no = lista.getNode(i);
                     if (no != null) {
-                        inserir(no);
+                        inserir(no); // Reinserir o nó na nova tabela
                     }
                 }
             }
         }
-
-        temp = null;
-        n = contarNos();
+    
+        temp = null; // Libera a memória da tabela antiga
+        n = contarNos(); // Atualiza o número total de elementos
     }
+    
+    
 
     // Encontrar o próximo número primo
     int proxPrimo(int numero) {
@@ -149,7 +171,6 @@ public class TabelaHash {
         return 2;
     }
 
-    // Verificar se um número é primo
     boolean ehPrimo(int numero) {
         if (numero <= 1) {
             return false;
@@ -162,28 +183,6 @@ public class TabelaHash {
         return true;
     }
 
-    // Sortear um elemento aleatório da tabela
-    public Node sortearElemento() {
-        Random rand = new Random();
-        Node noSorteado = null;
-
-        while (noSorteado == null) {
-            int indiceTabela = rand.nextInt(M);
-
-            ListaAutoAjustavel lista = tabela[indiceTabela];
-            if (lista.size() > 0) {
-                int indiceLista = rand.nextInt(lista.size());
-                noSorteado = lista.getNode(indiceLista);
-            }
-        }
-
-        System.out.println("Elemento sorteado: ");
-        printarNode(noSorteado);
-
-        return noSorteado;
-    }
-
-    // Método auxiliar para imprimir um Node
     void printarNode(Node no) {
         System.out.println("=================");
         System.out.println("Código: " + no.getKey());
