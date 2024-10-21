@@ -36,7 +36,7 @@ public class TesteCompressaoOS {
 
 
         System.out.println("codigo comprimido:");
-        String codificado = arvh.codificar(mensagem);
+        String codificado = arvh.comprimir(mensagem);
         System.out.println(codificado);
 
         System.out.println("codigo descomprimido:");
