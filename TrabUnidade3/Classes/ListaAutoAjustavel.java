@@ -2,23 +2,28 @@ package Classes;
 
 public class ListaAutoAjustavel {
 
-    private Node[] lista;  // Array de Nodes
-    private int tam;       // Tamanho máximo da lista
-    private int tamAtual;  // Número de elementos na lista atualmente
+    private Node[] lista;  // a lista propriamente dita
+    private int tam;       // tamanho max
+    private int tamAtual;  // qtd de nodes atual
 
     public ListaAutoAjustavel(int t) {
         tam = t;
-        lista = new Node[tam];  // Inicializa o array com o tamanho máximo
-        tamAtual = 0;           // Lista começa vazia
+        lista = new Node[tam];
+        tamAtual = 0;
     }
 
-    // Método para inserir um novo elemento na lista
-    public void inserir(int ch, OS valor) {
+    public void inserir(Node no) {
+        if (no == null) {
+            System.out.println("Node nao pode ser nulo.");
+            return;
+        }
+
         if (tamAtual < tam) {
-            if (existe(ch)) {
-                System.out.println("Chave já existe. Elemento não será inserido novamente.");
+            if (existe(no.getKey())) {
+                System.out.println("O ELEMENTO DE CHAVE " + no.getKey() + " JA EXISTE LADRAO, NAO VAI SER BOTADO NA CACHE DNV");
+                imprimir();
             } else {
-                lista[tamAtual] = new Node(ch, valor);
+                lista[tamAtual] = no;
                 tamAtual++;
             }
         } else {
@@ -26,18 +31,16 @@ public class ListaAutoAjustavel {
         }
     }
 
-    // Método para verificar se a chave já existe na lista
     private boolean existe(int ch) {
         for (int i = 0; i < tamAtual; i++) {
             if (lista[i].getKey() == ch) {
-                transpor(i);  // Transpor o elemento para uma posição anterior
+                transpor(i);
                 return true;
             }
         }
         return false;
     }
 
-    // Método de transposição (ajusta a posição dos elementos para facilitar acessos futuros)
     private void transpor(int index) {
         if (index > 0) {
             Node temp = lista[index];
@@ -46,11 +49,9 @@ public class ListaAutoAjustavel {
         }
     }
 
-    // Método para remover um elemento da lista
-    public void remover(int ch) {
+    public Node remover(int ch) {
         int index = -1;
         
-        // Procurar o índice do elemento com a chave fornecida
         for (int i = 0; i < tamAtual; i++) {
             if (lista[i].getKey() == ch) {
                 index = i;
@@ -58,48 +59,48 @@ public class ListaAutoAjustavel {
             }
         }
 
-        // Se o elemento for encontrado, remover e ajustar a lista
         if (index != -1) {
+            Node retorno = lista[index];
             for (int i = index; i < tamAtual - 1; i++) {
-                lista[i] = lista[i + 1];  // Move os elementos subsequentes para preencher o espaço
+                lista[i] = lista[i + 1];  // move o resto dos elementos pra preencher espaço
             }
-            lista[tamAtual - 1] = null;  // Opcional: Limpar o último elemento
+            lista[tamAtual - 1] = null;  // limpando o último elemento
             tamAtual--;
             System.out.println("Elemento de chave " + ch + " removido da lista auto ajustavel");
+            return retorno;
         } else {
             System.out.println("Chave não encontrada");
+            return null;
         }
     }
 
-    // Método para buscar um elemento pelo seu valor de chave
-    public OS buscar(int ch) {
-        for (int i = 0; i < tamAtual; i++) {
+    public Node buscar(int ch) {
+        for (int i = 0; i < tamAtual; i++) {            
             if (lista[i].getKey() == ch) {
-                transpor(i);  // Transpor o elemento para uma posição anterior
-                return lista[i].getOS();
+                Node retorno = lista[i];
+                transpor(i); 
+                return retorno;
             }
         }
-        return null; // Retorna null se o elemento não for encontrado
+        System.out.println("Chave " + ch + " não encontrada na lista.");
+        return null;
     }
+    
 
-    // Método para retornar o tamanho atual da lista (quantos elementos estão preenchidos)
     public int size() {
         return tamAtual;
     }
 
-    // Método para retornar um Node em uma posição específica da lista
     public Node getNode(int index) {
         if (index >= 0 && index < tamAtual) {
             return lista[index];
         }
-        return null;  // Retorna null se o índice for inválido
+        return null; 
     }
 
-    // Método para exibir a lista
     public void imprimir() {
-        System.out.println("--- Lista Atual ---");
         for (int i = 0; i < tamAtual; i++) {
-            System.out.println(lista[i].getKey() + " ");
+            System.out.print(lista[i].getKey() + " ");
         }
         System.out.println();
     }
