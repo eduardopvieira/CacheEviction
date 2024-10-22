@@ -38,7 +38,10 @@ public class Servidor {
     }
 
 
-    public void inserir(String msgCodificada, ArvoreHuffman arvh) {
+    public void inserir(DadosCompressao nodeComprimido) {
+
+        String msgCodificada = nodeComprimido.msgComprimida;
+        ArvoreHuffman arvh = nodeComprimido.arvh;
 
         System.out.println("MENSAGEM COMPRIMIDA: " + msgCodificada);
         String decodificada = arvh.descomprimir(msgCodificada);
@@ -139,6 +142,21 @@ public class Servidor {
 		if (tabela.fatorDeCarga() >= 7.5) { // *"Sedgewick recomenda escolher m tal que n/m fique entre 5 e 10."
 			tabela.resize(true);
 		}
+    }
+
+    public boolean atualizarSvComprimido(DadosCompressao comprimido) {
+        Node atualizar = comprimido.descomprimir();
+
+        Node existe = tabela.buscar(atualizar.getKey());
+
+        if (existe != null) {
+            existe.setOS(atualizar.getOS());
+            System.out.println("OS de código " + atualizar.getKey() + " atualizado com sucesso no SERVIDOR.");
+            return true;
+        }
+        
+        System.out.println("Node nao encontrado no servidor.");
+        return false;
     }
 
 
