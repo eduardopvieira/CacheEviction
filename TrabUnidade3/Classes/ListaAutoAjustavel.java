@@ -18,23 +18,28 @@ public class ListaAutoAjustavel {
             return;
         }
 
+        if (existe(no.getKey())) {
+            System.out.println("O ELEMENTO DE CHAVE " + no.getKey() + " JÁ EXISTE, NÃO SERÁ ADICIONADO NOVAMENTE.");
+            imprimir();
+            return;
+        }
+
         if (tamAtual < tam) {
-            if (existe(no.getKey())) {
-                System.out.println("O ELEMENTO DE CHAVE " + no.getKey() + " JA EXISTE LADRAO, NAO VAI SER BOTADO NA CACHE DNV");
-                imprimir();
-            } else {
-                lista[tamAtual] = no;
-                tamAtual++;
-            }
+            lista[tamAtual] = no;
+            tamAtual++;
         } else {
-            System.out.println("Lista cheia.");
+            // Lista cheia, remover o último e inserir o novo node
+            System.out.println("Lista cheia, substituindo o último valor (chave " + lista[tam - 1].getKey() + ") por " + no.getKey());
+            removerUltimo();  // remove o último node da lista
+            lista[tamAtual] = no;
+            tamAtual++;
         }
     }
 
     private boolean existe(int ch) {
         for (int i = 0; i < tamAtual; i++) {
             if (lista[i].getKey() == ch) {
-                transpor(i);
+                transpor(i);  // Se o elemento já existe, faz a transposição
                 return true;
             }
         }
@@ -66,11 +71,19 @@ public class ListaAutoAjustavel {
             }
             lista[tamAtual - 1] = null;  // limpando o último elemento
             tamAtual--;
-            System.out.println("Elemento de chave " + ch + " removido da lista auto ajustavel");
+            System.out.println("Elemento de chave " + ch + " removido da lista auto ajustável.");
             return retorno;
         } else {
-            System.out.println("Chave não encontrada");
+            System.out.println("Chave não encontrada na cache.");
             return null;
+        }
+    }
+
+    private void removerUltimo() {
+        if (tamAtual > 0) {
+            System.out.println("Removendo o último elemento: " + lista[tamAtual - 1].getKey());
+            lista[tamAtual - 1] = null;
+            tamAtual--;
         }
     }
 
@@ -78,7 +91,7 @@ public class ListaAutoAjustavel {
         for (int i = 0; i < tamAtual; i++) {            
             if (lista[i].getKey() == ch) {
                 Node retorno = lista[i];
-                transpor(i); 
+                transpor(i);  // Ao buscar, transpõe o elemento encontrado
                 return retorno;
             }
         }
