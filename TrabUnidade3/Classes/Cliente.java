@@ -21,7 +21,7 @@ public class Cliente {
         inicializacao();
 
         int decisao = 0;
-        while (decisao != 9) {
+        while (decisao != 10) {
 
             System.out.println("================ INTERFACE ================");
             System.out.println("[1] - Cadastrar OS");
@@ -32,7 +32,8 @@ public class Cliente {
             System.out.println("[6] - Buscar OS");
             System.out.println("[7] - Printar cache");
             System.out.println("[8] - Printar base de dados");
-            System.out.println("[9] - Sair");
+            System.out.println("[9] - Buscar no Log");
+            System.out.println("[10] - Sair");
             System.out.println("Decisão: ");
             Scanner sc = new Scanner(System.in);
             decisao = sc.nextInt();
@@ -61,20 +62,13 @@ public class Cliente {
                         OS os = new OS(nome, desc, hora);
                         Node no = new Node(codigo, os);
 
-                        //! parte da compressao
-                        System.out.println("Comprimindo OS:");
-                        ArvoreHuffman arvh = new ArvoreHuffman();
-                        String msg = no.gerarMensagem();
-                        int[] arrayNums = new int[msg.length()];
-                        char[] arrayChar = new char[msg.length()];
-                        arvh.contarCaractereFrequencia(msg, arrayChar, arrayNums);
-                        arvh.construirArvore(arrayChar, arrayNums);
-                        String msgCodificada = arvh.comprimir(msg);
+                        //! compressao:
+                        DadosCompressao nodeComprimido = comprimirNode(no);
 
-                        sv.inserir(msgCodificada, arvh);
+                        sv.inserir(nodeComprimido);
 
                         System.out.println("OS cadastrado com sucesso.");
-                        logger.log(no);
+                        logger.log(no, true, false, false, false);
                     } else {
                         System.out.println("O código digitado já existe na base de dados.");
                     }
@@ -83,7 +77,7 @@ public class Cliente {
                 case 2:
                     System.out.println("Listando todos os OS: ");
                     sv.tabela.listarElementos();
-                    logger.log(null);
+                    logger.log(null, false, false, false, false);
                     break;
 
                 case 3:
@@ -140,8 +134,15 @@ public class Cliente {
 
                         OS newOs = new OS(newNome, newDesc, newHora);
                         alter.setOS(newOs);
+
+                        DadosCompressao comprimido = comprimirNode(alter);
+
+                        //!mandando node comprimido para cache e servidor
+                        cacheSv.atualizarCacheComprimido(comprimido);
+                        sv.atualizarSvComprimido(comprimido);
+
                         System.out.println("Alteração realizada com sucesso.");
-                        //logger.log();
+                        logger.log(alter, false, false, true, false);
                         break;
                     }
                     System.out.println("Nenhum OS encontrado com esse código.");
@@ -149,24 +150,23 @@ public class Cliente {
 
                 case 4:
                     System.out.println("Digite o código do OS a ser removido: ");
+                    
                     Integer remov = sc.nextInt();
                     sc.nextLine();
+                
 
-                    //! compressao acontece aqui ------V
+                    cacheSv.removerCache(remov);
                     DadosCompressao removido = sv.removerComprimido(remov);
                     
                     if (removido != null) {
-                        
                         Node nodeRemovido = removido.descomprimir();
-                        
                         sv.remover(nodeRemovido.getKey());
-
-                        cacheSv.removerCache(nodeRemovido.getKey());
-
+                        System.out.println("Node de chave " + nodeRemovido.getKey() + " removido do servidor.");
+                        logger.log(nodeRemovido, false, true, false, false);
                     } else {
-                        System.out.println("Nenhum OS encontrado com esse código.");
+                        System.out.println("Nenhum OS encontrado com esse código no servidor.");
                     }
-                    // logger.log();
+                    
                     break;
 
                 case 5:
@@ -185,9 +185,8 @@ public class Cliente {
                     
                     if (retorno != null) {
                         cacheSv.adicionar(retorno);
+                        logger.log(retorno, false, false, false, true);
                     }
-
-                    logger.log(null);
 
                     break;
 
@@ -202,6 +201,51 @@ public class Cliente {
                     break;
 
                 case 9:
+                    KMP kmp = new KMP();
+                    String caminhoArquivo = "log.txt";  // Certifique-se de que o arquivo esteja no local correto
+                    String conteudoLog = kmp.lerArquivo(caminhoArquivo);
+                    
+                    if (conteudoLog.isEmpty()) {
+                        System.out.println("Arquivo de log está vazio ou não foi encontrado.");
+                        break;
+                    }
+                
+                    System.out.println("Qual operação a ser buscada?");
+                    System.out.println("[1] - Cadastro");
+                    System.out.println("[2] - Remoção");
+                    int choice = sc.nextInt();
+                    sc.nextLine();  // Limpar o buffer
+                
+                    switch(choice) {
+                        case 1:
+                            System.out.println("Digite a chave a ser buscada:");
+                            if (sc.hasNextInt()) {
+                                int chaveCadastrada = sc.nextInt();
+                                String padraoCadastro = "CADASTRAR CHAVE " + chaveCadastrada;
+                                kmp.buscar(padraoCadastro, conteudoLog);
+                            } else {
+                                System.out.println("Entrada inválida.");
+                            }
+                            break;
+                        
+                        case 2:
+                            System.out.println("Digite a chave a ser buscada:");
+                            if (sc.hasNextInt()) {
+                                int chaveRemovida = sc.nextInt();
+                                String padraoRemover = "DELETAR CHAVE " + chaveRemovida;
+                                kmp.buscar(padraoRemover, conteudoLog);
+                            } else {
+                                System.out.println("Entrada inválida.");
+                            }
+                            break;
+                        
+                        default:
+                            System.out.println("Opção inválida.");
+                            break;
+                    }
+                    break;                   
+                
+                case 10:
                     System.out.println("Encerrando programa.");
                     break;
 
@@ -305,5 +349,27 @@ public class Cliente {
             }
             x++;
         }
+    }
+
+    public DadosCompressao comprimirNode(Node no) {
+        
+        System.out.println("Comprimindo OS:");
+        
+        ArvoreHuffman arvh = new ArvoreHuffman();
+        
+        String msg = no.gerarMensagem();
+        
+        int[] arrayNums = new int[msg.length()];
+        char[] arrayChar = new char[msg.length()];
+        
+        arvh.contarCaractereFrequencia(msg, arrayChar, arrayNums);
+        
+        arvh.construirArvore(arrayChar, arrayNums);
+        
+        String msgComprimida = arvh.comprimir(msg);
+        
+        DadosCompressao retorno = new DadosCompressao(arvh, msgComprimida);
+
+        return retorno;
     }
 }
