@@ -25,7 +25,7 @@ public class DadosCompressao {
                 chave = Integer.parseInt(partes[i + 1]);
             } else if (partes[i].equals("Nome:")) {
                 nome = partes[i + 1];
-            } else if (partes[i].equals("Descrição:")) {
+            } else if (partes[i].equals("Descricao:")) {
                 descricao = partes[i + 1];
             } else if (partes[i].equals("Hora:")) {
                 hora = partes[i + 1];
