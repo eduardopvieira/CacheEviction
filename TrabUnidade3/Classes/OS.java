@@ -36,7 +36,7 @@ public class OS {
 
     public String gerarMensagemOS() {
         return "Nome: " + this.nome +
-        " Descrição: " + this.descricao +
+        " Descricao: " + this.descricao +
         " Hora: " + this.hora; 
     }
 
