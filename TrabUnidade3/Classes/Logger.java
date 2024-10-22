@@ -16,14 +16,29 @@ public class Logger {
         this.cache = cach;
     }
 
-    public void log(Node adicionado) {
+    public void log(Node vitima, boolean cadastro, boolean delecao, boolean alteracao, boolean busca) {
         StringBuilder logString = new StringBuilder();
 
         // Logando a tabela hash
         logString.append("Base de Dados:\n");
-        if(adicionado != null) {
-            logString.append("CADASTRO DA CHAVE " + adicionado.getKey() + ":\n");
+        if(vitima != null && cadastro == true) {
+            logString.append("CADASTRAR CHAVE " + vitima.getKey() + ":\n");
         }
+
+        if(vitima != null && delecao == true) {
+            logString.append("DELETAR CHAVE " + vitima.getKey() + ":\n");
+        }
+        
+        if(vitima != null && alteracao == true) {
+            logString.append("ALTERAR CHAVE " + vitima.getKey() + ":\n");
+        }
+
+        if(vitima != null && busca == true) {
+            logString.append("BUSCA CHAVE " + vitima.getKey() + ":\n");
+        }
+
+
+
         for (int i = 0; i < baseDados.tabela.M; i++) {
             logString.append("[ ").append(i).append(" ] --> ");
             ListaAutoAjustavel lista = baseDados.tabela.tabela[i]; // Usando a ListaAutoAjustavel
