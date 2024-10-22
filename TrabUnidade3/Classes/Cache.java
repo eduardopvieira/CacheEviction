@@ -47,5 +47,20 @@ public class Cache {
         DadosCompressao dc = new DadosCompressao(arvh, comprimido);
         return dc;
     }
+
+    public boolean atualizarCacheComprimido(DadosCompressao comprimido) {
+        Node atualizar = comprimido.descomprimir();
+
+        Node existe = cache.buscar(atualizar.getKey());
+
+        if (existe != null) {
+            existe.setOS(atualizar.getOS());
+            System.out.println("OS de código " + atualizar.getKey() + " atualizado com sucesso na CACHE");
+            return true;
+        }
+
+        System.out.println("Node nao encontrado na CACHE.");
+        return false;
+    }
    
 }
