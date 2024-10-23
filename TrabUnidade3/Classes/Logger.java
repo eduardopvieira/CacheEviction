@@ -19,7 +19,6 @@ public class Logger {
     public void log(Node vitima, boolean cadastro, boolean delecao, boolean alteracao, boolean busca) {
         StringBuilder logString = new StringBuilder();
 
-        // Logando a tabela hash
         logString.append("Base de Dados:\n");
         if(vitima != null && cadastro == true) {
             logString.append("CADASTRAR CHAVE " + vitima.getKey() + ":\n");
@@ -41,16 +40,15 @@ public class Logger {
 
         for (int i = 0; i < baseDados.tabela.M; i++) {
             logString.append("[ ").append(i).append(" ] --> ");
-            ListaAutoAjustavel lista = baseDados.tabela.tabela[i]; // Usando a ListaAutoAjustavel
+            ListaAutoAjustavel lista = baseDados.tabela.tabela[i];
 
-            if (lista.size() == 0) { // Verifica se a lista está vazia
+            if (lista.size() == 0) {
                 logString.append("null\n");
             } else {
-                // Itera sobre a lista autoajustável para logar as chaves dos Nodes
                 for (int j = 0; j < lista.size(); j++) {
-                    Node node = lista.getNode(j); // Acessa cada Node
+                    Node node = lista.getNode(j);
                     if (node != null) {
-                        logString.append(node.getKey()).append(" "); // Loga a chave do Node
+                        logString.append(node.getKey()).append(" ");
                     }
                 }
                 logString.append("\n");
@@ -58,22 +56,16 @@ public class Logger {
         }
         logString.append("\n");
 
-        // Logando a Cache (como uma lista autoajustável de 30 elementos)
         logString.append("Cache:\n");
-        ListaAutoAjustavel cacheLista = cache.getCache(); // Obtendo a lista autoajustável da cache
+        ListaAutoAjustavel cacheLista = cache.getCache();
 
         if (cacheLista.size() == 0) {
             logString.append("Cache vazia.\n");
         } else {
-            // Itera sobre a lista autoajustável da cache
             for (int i = 0; i < cacheLista.size(); i++) {
-                Node node = cacheLista.getNode(i); // Acessa cada Node da cache
+                Node node = cacheLista.getNode(i);
                 if (node != null) {
-                    //logString.append("[ ").append(i).append(" ] --> ");
                     logString.append("[ ").append(node.getKey()).append(" ] ");
-                    //logString.append("Nome: ").append(node.getOS().getNome()).append(", ");
-                    //logString.append("Descrição: ").append(node.getOS().getDescricao()).append(", ");
-                    //logString.append("Hora: ").append(node.getOS().getHora()).append("\n");
                 } else {
                     logString.append("[ ").append(i).append(" ] --> null\n");
                 }
@@ -81,7 +73,6 @@ public class Logger {
         }
         logString.append("\n");
 
-        // ESCREVE NO ARQUIVO
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, true))) {
             bw.write(logString.toString());
             bw.write("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=\n");
