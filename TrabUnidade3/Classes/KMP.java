@@ -24,7 +24,7 @@ public class KMP {
             }
             if (j == M) {
                 System.out.println("Padrão '" + padrao + "' encontrado no índice " + (i - j));
-                return true;  // Retorna true quando encontra o padrão
+                return true;
             }
             else if (i < N && padrao.charAt(j) != texto.charAt(i)) {
                 if (j != 0) {
@@ -36,14 +36,13 @@ public class KMP {
             }
         }
         System.out.println("Padrão '" + padrao + "' não encontrado.");
-        return false;  // Retorna false quando o padrão não é encontrado
+        return false; 
     }
 
-    // Função para construir a tabela de prefixo para o padrão
     void criarTabelaPrefixo(String padrao, int M) {
         int tamanhoPrefixo = 0;
         int i = 1;
-        tabelaPrefixo[0] = 0;  // O primeiro valor da tabela de prefixo é sempre 0
+        tabelaPrefixo[0] = 0;
 
         while (i < M) {
             if (padrao.charAt(i) == padrao.charAt(tamanhoPrefixo)) {
@@ -63,17 +62,17 @@ public class KMP {
         }
     }
 
-    // Função para ler o arquivo de log
+
     public String lerArquivo(String caminhoArquivo) {
         StringBuilder conteudo = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
-                conteudo.append(linha).append("\n");  // Adiciona cada linha do arquivo ao StringBuilder
+                conteudo.append(linha).append("\n");
             }
         } catch (IOException e) {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
-        return conteudo.toString();  // Retorna o conteúdo do arquivo como uma única String
+        return conteudo.toString();
     }
 }
