@@ -68,6 +68,8 @@ public class Cliente {
                         sv.inserir(nodeComprimido);
 
                         System.out.println("OS cadastrado com sucesso.");
+
+                        //! logger do cadastro pra usar de exemplo
                         logger.log(no, true, false, false, false);
                     } else {
                         System.out.println("O código digitado já existe na base de dados.");
@@ -202,11 +204,11 @@ public class Cliente {
 
                 case 9:
                     KMP kmp = new KMP();
-                    String caminhoArquivo = "log.txt";  // Certifique-se de que o arquivo esteja no local correto
+                    String caminhoArquivo = "log.txt";
                     String conteudoLog = kmp.lerArquivo(caminhoArquivo);
                     
                     if (conteudoLog.isEmpty()) {
-                        System.out.println("Arquivo de log está vazio ou não foi encontrado.");
+                        System.out.println("Arquivo de log vazio/não encontrado.");
                         break;
                     }
                 
@@ -214,7 +216,7 @@ public class Cliente {
                     System.out.println("[1] - Cadastro");
                     System.out.println("[2] - Remoção");
                     int choice = sc.nextInt();
-                    sc.nextLine();  // Limpar o buffer
+                    sc.nextLine();
                 
                     switch(choice) {
                         case 1:
@@ -286,7 +288,6 @@ public class Cliente {
 
         Node retorno = nodeCacheComprimido.descomprimir();
         
-        
         System.out.println("Encontrado na cache:");
         System.out.println("NODE COMPRIMIDO:" + nodeCacheComprimido.msgComprimida);
         System.out.println("NODE DESCOMPRIMIDO: " + retorno.gerarMensagem() );
@@ -321,7 +322,7 @@ public class Cliente {
     
 
     private void inicializacao() {
-        for (int i = 1; i <= 70; i++) {
+        for (int i = 1; i <= 100; i++) {
             String nome = "Operação" + i;
             String descricao = "Desc" + i;
             String horario = String.format("%02d:%02d", (i % 24), (i % 60));
