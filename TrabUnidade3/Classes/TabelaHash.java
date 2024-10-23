@@ -1,11 +1,9 @@
 package Classes;
 
-import java.util.Random;
-
 public class TabelaHash {
 
-    int M; // tamanho da tabela
-    int n; // número de elementos na tabela
+    int M;
+    int n;
     ListaAutoAjustavel[] tabela;
 
     public TabelaHash(int tam) {
@@ -22,12 +20,10 @@ public class TabelaHash {
         }
     }
 
-    // Função hash
     public int hash(int ch) {
         return ch % this.M;
     }
 
-    // Inserir elemento na tabela hash
     public void inserir(Node no) {
         int h = this.hash(no.getKey());
         ListaAutoAjustavel lista = this.tabela[h];
@@ -47,45 +43,30 @@ public class TabelaHash {
         ListaAutoAjustavel lista = this.tabela[h];  // Acessar a lista autoajustável correspondente
     
         Node no = lista.buscar(v);
-        if (no != null) {
+        if (no != null) { // se node for encontrado
             System.out.println("Elemento encontrado na tabela hash: " + no.getKey());
-            return no; // Retorna o node se encontrado
+            return no; 
         }
-    
+
+        // se node nao for encontrdao
         System.out.println("Elemento " + v + " não encontrado na tabela hash.");
-        return null; // Se não encontrado
+        return null; 
     }
-    
 
-    // public Node buscar(int v) {
-    //     int h = this.hash(v);
-    //     ListaAutoAjustavel lista = this.tabela[h];
-
-    //     Node no = lista.buscar(v);
-    //     if (no != null) {
-    //         return no;
-    //     }
-
-    //     return null;
-    // }
-
-    // Remover elemento da tabela hash
     public Node remover(int v) {
         int h = this.hash(v);
         ListaAutoAjustavel lista = this.tabela[h];
 
-        // Remover o valor da lista autoajustável
         Node no = lista.buscar(v);
         if (no != null) {
-            lista.remover(v); // Remove da lista autoajustável
+            lista.remover(v);
             n--;
             return no;
         }
 
-        return null; // Se não encontrado
+        return null;
     }
 
-    // Imprimir a tabela hash
     public void imprimirTabelaHash() {
         for (int i = 0; i < this.M; i++) {
             System.out.print("[ " + i + " ] --> ");
@@ -93,7 +74,6 @@ public class TabelaHash {
         }
     }
 
-    // Fator de carga
     public double fatorDeCarga() {
         System.out.println("Valor de n: " + n);
         System.out.println("Valor de M: " + M);
@@ -102,11 +82,10 @@ public class TabelaHash {
         return fator;
     }
 
-    // Contar elementos da tabela
     public int contarNos() {
         int count = 0;
         for (int i = 0; i < this.M; i++) {
-            count += tabela[i].size(); // Usa o método size da ListaAutoAjustavel
+            count += tabela[i].size();
         }
         return count;
     }
@@ -118,11 +97,11 @@ public class TabelaHash {
     
         System.out.println("REDIMENSIONANDO!!!!!");
     
-        ListaAutoAjustavel[] temp = tabela; // Armazena a tabela atual em temp
+        ListaAutoAjustavel[] temp = tabela;
         if (aumentar) {
-            M = proxPrimo(M * 2); // Aumenta para o próximo primo após dobrar o tamanho
+            M = proxPrimo(M * 2);
         } else {
-            M = primoAnterior(M / 2); // Diminui para o primo anterior após reduzir o tamanho pela metade
+            M = primoAnterior(M / 2);
         }
     
         double fatorDeCargaMaximo = 7.5;
@@ -132,7 +111,7 @@ public class TabelaHash {
         tabela = new ListaAutoAjustavel[M];
     
         for (int i = 0; i < M; i++) {
-            tabela[i] = new ListaAutoAjustavel(novoTamLista); // Nova lista com tamanho ajustado
+            tabela[i] = new ListaAutoAjustavel(novoTamLista);
         }
     
         for (ListaAutoAjustavel lista : temp) {
@@ -140,19 +119,18 @@ public class TabelaHash {
                 for (int i = 0; i < lista.size(); i++) {
                     Node no = lista.getNode(i);
                     if (no != null) {
-                        inserir(no); // Reinserir o nó na nova tabela
+                        inserir(no);
                     }
                 }
             }
         }
     
-        temp = null; // Libera a memória da tabela antiga
-        n = contarNos(); // Atualiza o número total de elementos
+        temp = null;
+        n = contarNos();
     }
     
     
 
-    // Encontrar o próximo número primo
     int proxPrimo(int numero) {
         while (!ehPrimo(numero)) {
             numero++;
@@ -160,7 +138,6 @@ public class TabelaHash {
         return numero;
     }
 
-    // Encontrar o primo anterior
     public int primoAnterior(int numero) {
         while (numero > 2) {
             if (ehPrimo(numero)) {
@@ -201,7 +178,7 @@ public class TabelaHash {
                 for (int j = 0; j < lista.size(); j++) {
                     Node no = lista.getNode(j);
                     if (no != null) {
-                        printarNode(no); // Imprime o conteúdo do Node
+                        printarNode(no);
                     }
                 }
             } else {
