@@ -15,6 +15,8 @@ public class Servidor {
         return tabela.buscar(x);
     }
 
+
+    //! metodo novo
     public DadosCompressao buscaComprimidaServer(int x) {
         Node no = buscar(x);
 
@@ -38,6 +40,7 @@ public class Servidor {
     }
 
 
+    //! metodo ajustado
     public void inserir(DadosCompressao nodeComprimido) {
 
         String msgCodificada = nodeComprimido.msgComprimida;
@@ -126,7 +129,6 @@ public class Servidor {
 
         return retorno;
     }
-
 
     public void listarElementos() {
         tabela.listarElementos();
