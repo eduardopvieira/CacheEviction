@@ -3,8 +3,8 @@ package Huffman;
 public class ArvoreHuffman {
 
     public NodeHuffman raiz;
-    private char[] caracteres; //ARRAY DE CARACTERES
-    private String[] codigos; // CODIGOS GERADOS PELA ARVORE DE HUFMAN
+    private char[] caracteres;
+    private String[] codigos; // CODIGOS GERADOS PELA ARVORE DE HUFFMAN
     private int indice; // INDICE PRA ALGUMAS FUNCOES
     HeapMinimo heapMinimo;
 
@@ -16,70 +16,58 @@ public class ArvoreHuffman {
 
             int indice = buscarIndice(arrayCaracteres, numCaracteresUnicos, caractereAtual);
 
-            if (indice == -1) { // caso o caractere nao esteja no array ele é adicionado ao final
+            if (indice == -1) {
                 arrayCaracteres[numCaracteresUnicos] = caractereAtual;
                 arrayFrequencias[numCaracteresUnicos] = 1;
                 numCaracteresUnicos++;
-            } else { // caso o caractere ja esteja no array, aí so incrementa a frequencia msm
+            } else {
                 arrayFrequencias[indice]++;
             }
         }
-
-        for (int j = 0; j < arrayCaracteres.length; j++) {
-            System.out.println(arrayCaracteres[j] + " : " + arrayFrequencias[j]);
-        }
     }
 
-    private int buscarIndice(char[] arrayCaracteres, int tamanhoAtual, char caractere) {
-        for (int i = 0; i < tamanhoAtual; i++) {
-            if (arrayCaracteres[i] == caractere) {
-                return i; // CARACTERE ENCONTRADO, RETORNA INDICE
-            }
-        }
-        return -1; // CARACTERE NAO ENCONTRADO
-    }
-
+    
     public void construirArvore(char[] arrayCaracteres, int[] arrayFrequencias) {
         caracteres = new char[arrayCaracteres.length];
         codigos = new String[arrayCaracteres.length];
         heapMinimo = new HeapMinimo(arrayCaracteres.length);
-
+        
         for (int i = 0; i < arrayCaracteres.length; i++) {
             NodeHuffman no = new NodeHuffman(arrayFrequencias[i], arrayCaracteres[i]);
             heapMinimo.inserir(no);
         }
-
+        
         while (heapMinimo.tamanho() > 1) {
             NodeHuffman x = heapMinimo.removerMinimo();
             NodeHuffman y = heapMinimo.removerMinimo();
-
+            
             NodeHuffman z = new NodeHuffman(x.freq + y.freq, '-');
             z.esquerda = x;
             z.direita = y;
-
+            
             heapMinimo.inserir(z);
         }
-
+        
         raiz = heapMinimo.removerMinimo();
-
+        
         gerarCodigos(raiz, "");
     }
-
+    
     private void gerarCodigos(NodeHuffman no, String codigo) {
         if (no == null) {
             return;
         }
-
+        
         if (no.esquerda == null && no.direita == null && isCharValido(no.caractere)) {
             caracteres[indice] = no.caractere;
             codigos[indice] = codigo;
             indice++;
         }
-
+        
         gerarCodigos(no.esquerda, codigo + "0");
         gerarCodigos(no.direita, codigo + "1");
     }
-
+    
     public String comprimir(String texto) {
         StringBuilder codigoHuffman = new StringBuilder();
 
@@ -92,53 +80,59 @@ public class ArvoreHuffman {
                 }
             }
         }
-
+        
         return codigoHuffman.toString();
     }
-
+    
     public String descomprimir(String codigo) {
         StringBuilder textoDescomprimido = new StringBuilder();
         NodeHuffman atual = raiz;
-
+        
         for (int i = 0; i < codigo.length(); i++) {
             char bit = codigo.charAt(i);
-
+            
             if (bit == '0') {
                 atual = atual.esquerda;
             } else if (bit == '1') {
                 atual = atual.direita;
             }
-
+            
             if (atual.esquerda == null && atual.direita == null) {
                 textoDescomprimido.append(atual.caractere);
                 atual = raiz;
             }
         }
-
+        
         return textoDescomprimido.toString();
     }
-
+    
     public void imprimirCodigo(NodeHuffman no, String s) {
-        // Verifica se o nó é nulo
         if (no == null) {
             return;
         }
-
-        // Verifica se o nó é uma folha (nó sem filhos)
+        
         if (no.esquerda == null && no.direita == null && isCharValido(no.caractere)) {
-            System.out.println(no.caractere + ": " + s);
             return;
         }
-
+        
         imprimirCodigo(no.esquerda, s + "0");
         imprimirCodigo(no.direita, s + "1");
     }
-
+    
     private boolean isCharValido(char c) {
         return (Character.isLetterOrDigit(c) || c == ' ' || c == ':');
     }
 
     public void imprimirCodigos() {
         imprimirCodigo(raiz, "");
+    }
+    
+    private int buscarIndice(char[] arrayCaracteres, int tamanhoAtual, char caractere) {
+        for (int i = 0; i < tamanhoAtual; i++) {
+            if (arrayCaracteres[i] == caractere) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
