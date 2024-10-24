@@ -59,7 +59,6 @@ public class Cache {
             return true;
         }
 
-        System.out.println("Node nao encontrado na CACHE.");
         return false;
     }
    
