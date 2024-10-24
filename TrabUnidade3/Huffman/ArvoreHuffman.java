@@ -4,8 +4,8 @@ public class ArvoreHuffman {
 
     public NodeHuffman raiz;
     private char[] caracteres;
-    private String[] codigos; // CODIGOS GERADOS PELA ARVORE DE HUFFMAN
-    private int indice; // INDICE PRA ALGUMAS FUNCOES
+    private String[] codigos;
+    private int indice;
     HeapMinimo heapMinimo;
 
     public void contarCaractereFrequencia(String mensagem, char[] arrayCaracteres, int[] arrayFrequencias) {
@@ -26,7 +26,7 @@ public class ArvoreHuffman {
         }
     }
 
-    
+    //! tinha no codigo base, o resto nao
     public void construirArvore(char[] arrayCaracteres, int[] arrayFrequencias) {
         caracteres = new char[arrayCaracteres.length];
         codigos = new String[arrayCaracteres.length];
