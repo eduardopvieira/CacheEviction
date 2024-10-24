@@ -33,23 +33,18 @@ public class TabelaHash {
         }
         n++;
         lista.inserir(no);
-        System.out.println("NO DE CHAVE " + no.getKey() + " INSERIDOOOOOO UHU    (SOUT EM INSERIR NA HASH)");
     }
 
 
     public Node buscar(int v) {
         int h = this.hash(v);
-        System.out.println("Hash calculada para " + v + ": " + h);
         ListaAutoAjustavel lista = this.tabela[h];  // Acessar a lista autoajustável correspondente
     
         Node no = lista.buscar(v);
         if (no != null) { // se node for encontrado
-            System.out.println("Elemento encontrado na tabela hash: " + no.getKey());
             return no; 
         }
-
         // se node nao for encontrdao
-        System.out.println("Elemento " + v + " não encontrado na tabela hash.");
         return null; 
     }
 
@@ -174,15 +169,12 @@ public class TabelaHash {
         for (int i = 0; i < this.M; i++) {
             ListaAutoAjustavel lista = tabela[i];
             if (lista.size() > 0) {
-                System.out.println("Posição [ " + i + " ]: ");
                 for (int j = 0; j < lista.size(); j++) {
                     Node no = lista.getNode(j);
                     if (no != null) {
                         printarNode(no);
                     }
                 }
-            } else {
-                System.out.println("Posição [ " + i + " ]: Vazia");
             }
         }
 	}
