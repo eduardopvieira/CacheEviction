@@ -21,8 +21,6 @@ public class ListaAutoAjustavel {
         }
 
         if (existe(no.getKey())) {
-            System.out.println("O ELEMENTO DE CHAVE " + no.getKey() + " JÁ EXISTE, NÃO SERÁ ADICIONADO NOVAMENTE.");
-            imprimir();
             return;
         }
 
@@ -38,9 +36,7 @@ public class ListaAutoAjustavel {
     }
 
     private void transpor(int index) {
-        if (index > 0) {
-            imprimir();
-            
+        if (index > 0) {            
             Node temp = lista[index];
             lista[index] = lista[index - 1];
             lista[index - 1] = temp;
