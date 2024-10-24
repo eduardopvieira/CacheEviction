@@ -41,4 +41,13 @@ public class Node {
         return sb.toString();
     }
 
+    public void printarNode() {
+        System.out.println("=================");
+        System.out.println("Chave: " + this.key);
+        System.out.println("Nome: " + this.getOS().getNome());
+        System.out.println("Descrição: " + this.getOS().getDescricao());
+        System.out.println("Hora: " + this.getOS().getHora());
+
+    }
+
 }
