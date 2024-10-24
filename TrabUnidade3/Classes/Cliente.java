@@ -65,6 +65,7 @@ public class Cliente {
                         //! compressao:
                         DadosCompressao nodeComprimido = comprimirNode(no);
 
+                        //! mandando o node comprimido pra ser inserido
                         sv.inserir(nodeComprimido);
 
                         System.out.println("OS cadastrado com sucesso.");
@@ -86,7 +87,6 @@ public class Cliente {
                     System.out.println("Digite o código do OS a ser alterado: ");
                     int cod = sc.nextInt();
 
-                    //! descompressão aqui
                     Node alter = buscarCacheSv(cod);
                     
                     if (alter != null) {
@@ -137,6 +137,7 @@ public class Cliente {
                         OS newOs = new OS(newNome, newDesc, newHora);
                         alter.setOS(newOs);
 
+                        //! compressao aqui
                         DadosCompressao comprimido = comprimirNode(alter);
 
                         //!mandando node comprimido para cache e servidor
@@ -156,13 +157,14 @@ public class Cliente {
                     Integer remov = sc.nextInt();
                     sc.nextLine();
                 
-
-                    cacheSv.removerCache(remov);
-                    DadosCompressao removido = sv.removerComprimido(remov);
+                    //!compressao
+                    DadosCompressao removido = sv.buscarComprimido(remov);
                     
+                    //!descompressao
                     if (removido != null) {
                         Node nodeRemovido = removido.descomprimir();
                         sv.remover(nodeRemovido.getKey());
+                        cacheSv.removerCache(nodeRemovido.getKey());
                         System.out.println("Node de chave " + nodeRemovido.getKey() + " removido do servidor.");
                         logger.log(nodeRemovido, false, true, false, false);
                     } else {
@@ -187,6 +189,7 @@ public class Cliente {
                     
                     if (retorno != null) {
                         cacheSv.adicionar(retorno);
+                        retorno.printarNode();
                         logger.log(retorno, false, false, false, true);
                     }
 
